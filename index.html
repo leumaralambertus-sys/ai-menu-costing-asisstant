@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Menu & Costing Assistant</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f1f3f5;
+            border-radius: 8px;
+        }
+
+        .result h2 {
+            margin-top: 0;
+        }
+
+        .highlight {
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🍳 AI Menu & Costing Assistant</h1>
+
+    <p class="subtitle">
+        Kitchen Costing Calculator — V1
+    </p>
+
+    <label>Nama Menu</label>
+    <input type="text" id="menu" placeholder="Contoh: Ayam Lada Hitam">
+
+    <label>Harga Bahan / Porsi (Rp)</label>
+    <input type="number" id="foodCost" placeholder="Contoh: 8500">
+
+    <label>Target Food Cost (%)</label>
+    <input type="number" id="foodCostPercent" value="40">
+
+    <button onclick="hitungCosting()">
+        HITUNG COSTING
+    </button>
+
+    <div class="result">
+
+        <h2>Hasil Perhitungan</h2>
+
+        <p>
+            Menu:
+            <strong id="hasilMenu">-</strong>
+        </p>
+
+        <p>
+            HPP / Porsi:
+            <strong id="hasilHPP">Rp 0</strong>
+        </p>
+
+        <p>
+            Estimasi Harga Jual:
+            <strong id="hasilHarga">Rp 0</strong>
+        </p>
+
+        <p>
+            Estimasi Gross Profit:
+            <strong class="highlight" id="hasilProfit">
+                Rp 0
+            </strong>
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+function hitungCosting() {
+
+    const menu =
+        document.getElementById("menu").value;
+
+    const foodCost =
+        Number(document.getElementById("foodCost").value);
+
+    const percent =
+        Number(document.getElementById("foodCostPercent").value);
+
+    if (!menu || !foodCost || !percent) {
+
+        alert("Silakan lengkapi semua data.");
+
+        return;
+    }
+
+    const hargaJual =
+        foodCost / (percent / 100);
+
+    const profit =
+        hargaJual - foodCost;
+
+    document.getElementById("hasilMenu").innerText =
+        menu;
+
+    document.getElementById("hasilHPP").innerText =
+        "Rp " + foodCost.toLocaleString("id-ID");
+
+    document.getElementById("hasilHarga").innerText =
+        "Rp " + Math.round(hargaJual).toLocaleString("id-ID");
+
+    document.getElementById("hasilProfit").innerText =
+        "Rp " + Math.round(profit).toLocaleString("id-ID");
+
+}
+
+</script>
+
+</body>
+</html>
