@@ -1,177 +1,1343 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Menu & Costing Assistant</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            text-align: center;
-            color: #222;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 14px;
-            background: #222;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .result {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f1f3f5;
-            border-radius: 8px;
-        }
-
-        .result h2 {
-            margin-top: 0;
-        }
-
-        .highlight {
-            font-size: 22px;
-            font-weight: bold;
-        }
-    </style>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1F44">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ChefPlan Pro</title>
+<style>
+:root{--navy:#0B2A5B;--blue:#1565D8;--gold:#F5A623;--bg:#F3F6FB;--card:#fff;--line:#E1E7F0;--tx:#13233F;--mut:#64748B;--ok:#1E9E5A;--warn:#D98A00;--bad:#D93636}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);font-size:15px}
+button,input,select{font:inherit}
+#splash{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;z-index:50}
+#splash h1{margin:10px 0 4px;font-size:34px;color:var(--navy)}#splash h1 b{color:var(--gold)}
+#splash p{margin:0 0 26px;color:var(--mut)}
+#splash img{width:min(80vw,340px);height:auto}.by{margin:4px 0 24px;font-size:12px;font-style:italic;color:var(--mut);letter-spacing:.3px}.by b{color:var(--navy);font-style:normal}
+#app{display:none;height:100%;flex-direction:column}
+header{background:linear-gradient(90deg,var(--navy),var(--blue));color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
+header h2{margin:0;font-size:18px;flex:1}
+header button{background:none;border:0;color:#fff;font-size:22px;width:40px;height:40px}
+main{flex:1;overflow-y:auto;padding:14px 14px 90px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+nav button{flex:1;border:0;background:none;padding:8px 0 6px;color:var(--mut);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button i{font-style:normal;font-size:20px}nav button.on{color:var(--blue);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(11,42,91,.06)}
+.card h3{margin:0 0 8px;font-size:15px;color:var(--navy)}
+.hero{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:0}.hero h3{color:#fff}
+.bar{height:8px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:100%;background:var(--gold)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;font-weight:600;color:var(--navy);box-shadow:0 2px 8px rgba(11,42,91,.06)}.tile i{display:block;font-style:normal;font-size:26px;margin-bottom:4px}
+.btn{display:block;width:100%;min-height:46px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:700;margin-top:8px;padding:10px}
+.btn.alt{background:#fff;color:var(--blue);border:1.5px solid var(--blue)}.btn.gold{background:var(--gold);color:#3b2600}.btn.bad{background:var(--bad)}
+.btn.sm{display:inline-block;width:auto;min-height:38px;padding:6px 12px;margin:4px 4px 0 0}.btn:disabled{opacity:.5}
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px;font-weight:600}
+input,select{width:100%;min-height:44px;border:1px solid #CBD5E4;border-radius:10px;padding:8px 10px;background:#fff;color:var(--tx)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;background:var(--mut)}
+.b-VALID{background:var(--ok)}.b-PERINGATAN{background:var(--warn)}.b-TIDAK{background:var(--bad)}
+.hero .badge{border:1px solid rgba(255,255,255,.6)}
+.tabs{display:flex;gap:6px;margin-bottom:10px}.tabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px;font-weight:600;color:var(--mut)}.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:12.5px}
+th{background:var(--blue);color:#fff;padding:8px 6px;text-align:left;position:sticky;top:0}
+td{border-top:1px solid var(--line);padding:7px 6px;vertical-align:top}tr.sun td{background:#FFF2B3}tr.tap{cursor:pointer}
+td.d{white-space:nowrap;font-weight:700;color:var(--navy)}td.d small{display:block;color:var(--mut);font-weight:500}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--mut)}.dot.VALID{background:var(--ok)}.dot.PERINGATAN{background:var(--warn)}.dot.TIDAK{background:var(--bad)}
+.it{display:block;line-height:1.35}
+.empty{text-align:center;color:var(--mut);padding:26px 10px}.empty b{display:block;color:var(--navy);margin-bottom:6px;font-size:16px}
+.list li{margin:4px 0}ul.list{padding-left:18px;margin:6px 0}
+#sheetBg{position:fixed;inset:0;background:rgba(10,20,40,.5);display:none;z-index:40;align-items:flex-end}
+#sheet{background:#fff;width:100%;max-height:88%;overflow-y:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom))}
+#sheet .x{float:right;border:0;background:none;font-size:24px;color:var(--mut)}
+#load{position:fixed;inset:0;background:rgba(255,255,255,.75);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:60;color:var(--navy);font-weight:600}
+.sp{width:42px;height:42px;border:5px solid #CFE0FA;border-top-color:var(--blue);border-radius:50%;animation:r 1s linear infinite;margin-bottom:10px}@keyframes r{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:14px;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));background:var(--navy);color:#fff;padding:12px 14px;border-radius:12px;display:none;z-index:70;font-size:14px}#toast.err{background:var(--bad)}#toast.ok{background:var(--ok)}
+.meal{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}.meal h4{margin:0 0 4px;color:var(--navy)}
+.menuitem{display:flex;gap:10px;align-items:center;padding:12px 4px;border-top:1px solid var(--line)}.menuitem:first-child{border-top:0}.menuitem i{font-style:normal;font-size:22px}.menuitem small{display:block;color:var(--mut)}
+</style>
 </head>
-
 <body>
 
-<div class="container">
-
-    <h1>🍳 AI Menu & Costing Assistant</h1>
-
-    <p class="subtitle">
-        Kitchen Costing Calculator — V1
-    </p>
-
-    <label>Nama Menu</label>
-    <input type="text" id="menu" placeholder="Contoh: Ayam Lada Hitam">
-
-    <label>Harga Bahan / Porsi (Rp)</label>
-    <input type="number" id="foodCost" placeholder="Contoh: 8500">
-
-    <label>Target Food Cost (%)</label>
-    <input type="number" id="foodCostPercent" value="40">
-
-    <button onclick="hitungCosting()">
-        HITUNG COSTING
-    </button>
-
-    <div class="result">
-
-        <h2>Hasil Perhitungan</h2>
-
-        <p>
-            Menu:
-            <strong id="hasilMenu">-</strong>
-        </p>
-
-        <p>
-            HPP / Porsi:
-            <strong id="hasilHPP">Rp 0</strong>
-        </p>
-
-        <p>
-            Estimasi Harga Jual:
-            <strong id="hasilHarga">Rp 0</strong>
-        </p>
-
-        <p>
-            Estimasi Gross Profit:
-            <strong class="highlight" id="hasilProfit">
-                Rp 0
-            </strong>
-        </p>
-
-    </div>
-
+<div id="splash">
+  <img id="logoImg" alt="ChefPlan Pro — Plan Smart. Cook Better. Lead Stronger." width="520" height="486">
+  <div class="by">by <b>Chef Berto Leumara</b></div>
+  <button class="btn" style="max-width:320px" id="btnMulai">Mulai</button>
+  <button class="btn alt" style="max-width:320px" id="btnSet">Pengaturan</button>
+  <p style="margin-top:22px;font-size:12px">Versi 1.0.0</p>
 </div>
 
+<div id="app">
+  <header><button id="hl" aria-label="Menu">☰</button><h2 id="title">ChefPlan Pro</h2></header>
+  <main id="view"></main>
+  <nav id="nav">
+    <button data-p="beranda"><i>🏠</i>Beranda</button>
+    <button data-p="rotasi"><i>🗓️</i>Rotasi</button>
+    <button data-p="resep"><i>📖</i>Resep</button>
+    <button data-p="bahan"><i>🧾</i>Bahan</button>
+    <button data-p="lainnya"><i>⋯</i>Lainnya</button>
+  </nav>
+</div>
+
+<div id="sheetBg"><div id="sheet"></div></div>
+<div id="load"><div class="sp"></div><span id="loadMsg">Memuat...</span></div>
+<div id="toast"></div>
+
 <script>
-
-function hitungCosting() {
-
-    const menu =
-        document.getElementById("menu").value;
-
-    const foodCost =
-        Number(document.getElementById("foodCost").value);
-
-    const percent =
-        Number(document.getElementById("foodCostPercent").value);
-
-    if (!menu || !foodCost || !percent) {
-
-        alert("Silakan lengkapi semua data.");
-
-        return;
-    }
-
-    const hargaJual =
-        foodCost / (percent / 100);
-
-    const profit =
-        hargaJual - foodCost;
-
-    document.getElementById("hasilMenu").innerText =
-        menu;
-
-    document.getElementById("hasilHPP").innerText =
-        "Rp " + foodCost.toLocaleString("id-ID");
-
-    document.getElementById("hasilHarga").innerText =
-        "Rp " + Math.round(hargaJual).toLocaleString("id-ID");
-
-    document.getElementById("hasilProfit").innerText =
-        "Rp " + Math.round(profit).toLocaleString("id-ID");
-
-}
-
+/* Logo resmi ChefPlan Pro (WebP ringan, tertanam agar cepat dibuka) */
+var LOGO = 'data:image/webp;base64,' + [
+'UklGRmhlAABXRUJQVlA4IFxlAACwSwGdASoIAuYBPm0ylUekIqIjpzL60IANiU3fhccmmOxmKSM/rf7p29Md+NP0P+P/b3+ve81Y',
+'37X/a/1p/Yfm1/ndkPvP/J8zXzr9q/8v+Q/L75nf6P/rf5X3Ffoj/zf5T9//oC/Vr/u/4T/V+2X6nv3b9Qv9Z/zn7Xe7v/v/3B93',
+'P9y/3H7L/5D5A/7J/d//P7Z3/o9k//Hf+32FP2///Xry/ur8MX9l/6f7ofBB+1P/9/4HuAf//2z/4B//+rX8K/xf9z/JH3z/Ff2D',
+'/C/2n8ePIh9M/ff7Z/kv9T/gf2u4U7/g9EP4190f0f9z/c72h/7vgf+a/xH/N/w/7rf4/5BfxL+e/5X+//4r/lf3rhugAfn39M/1',
+'n96/fH/Oekp/u/4j1N+vP++/vP5Y/YD/R/6n/svzu/0XtV+CL9v/3vsA/zH+zf9L/L/6v91fpu/qP/b/rfzl9zH5n/nf/b/qvgO/',
+'ln9y/7H+D/Kn56/Yt+5f//90T9wf/+YrpmekfBmbXGepzA3CviXl/tNhe5dfPC4ffJLUwmhcVwZm1vjIfBdv1+qS73nOSOKYQZAP',
+'0NYIPeQ1tgDlxXBmbXTM9I+DLSU2OSdAPZrtx3NMJT9jrugTTO3LH0+NeNXXXmfBzXLr56R8GZtdMz0j4MzSzjL587cP6Yt+smGP',
+'kUO9hLIPx8WDCNs7MJBjadMLCvhEa3aDU7Wjw+DM2umZ6R7xb8Z80+HqYeT16c2rZLMVj5NTiMyOSXMydtDc4rCcFt6oAH2+BKmc',
+'0eHwZm10zPSO6TAavoNswOLSSC4rj7U0rIimINVuvdntSAYUhmhcVwWpz07PC3V8EtTDth7yr/klUkPYcpgk4W6u9OHxU9PukuZf',
+'0osfFEuSv/TwB9UWfwMptdMz0j4MzaUktbgcb+tuj360ITnCcgak1LHfRsX376WqxDeF3Gxp2YnZTG/hBl6et//9VMdkQg57WemB',
+'lNrpmekfBmbSJOWW5E8E8W/y416gJBucrTbsCsz8XdGQjJ4j45ncqSHenS+0261JsNX3PLn05uJ4i9nmmOJ43NaHfUsyrjA+DM2u',
+'mZ6R26Bl1MUsmUcMY5F2bRalc2/QizS/7TG5EaBXKeXODxkTatEAktnd7oe2tbOTwNmvm4n/w790H91A9FHknGu0B/ocMVEIC16Y',
+'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',
+'we3lt93ZQJ61suAAAAAAAAAA'
+].join('');
+document.getElementById('logoImg').src = LOGO;
 </script>
 
+<script>
+/* ===== Inti aplikasi (dipakai juga oleh Halaman2.html) ===== */
+var $ = function (s, e) { return (e || document).querySelector(s); };
+var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+var BLN_F = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+var rp = function (n) { return 'Rp ' + Math.round(Number(n) || 0).toLocaleString('id-ID'); };
+var fmtD = function (t) { var a = String(t).split('-'); return a[2] + ' ' + BLN[+a[1] - 1] + ' ' + a[0]; };
+var S = { cid: null, cycle: null, data: null, menu: null, stack: [], cur: null, mode: 'tabel' };
+var PAGES = {};
+var TABS = ['beranda', 'rotasi', 'resep', 'bahan', 'lainnya'];
+
+function call(action, payload) {
+  return new Promise(function (res, rej) {
+    if (!window.google || !google.script || !google.script.run) return rej(new Error('Buka aplikasi lewat tautan Web App dari Apps Script.'));
+    google.script.run
+      .withSuccessHandler(function (r) { r && r.ok ? res(r.data) : rej(new Error(r ? r.error : 'Tidak ada respons dari server.')); })
+      .withFailureHandler(function (e) { rej(new Error((e && e.message) || 'Koneksi gagal. Periksa internet Anda.')); })
+      .api(action, payload || {});
+  });
+}
+function showLoad(m) { $('#loadMsg').textContent = m || 'Memuat...'; $('#load').style.display = 'flex'; }
+function hideLoad() { $('#load').style.display = 'none'; }
+function toast(m, t) { var e = $('#toast'); e.textContent = m; e.className = t || ''; e.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(function () { e.style.display = 'none'; }, t === 'err' ? 6000 : 3000); }
+async function run(fn, msg) { showLoad(msg); try { return await fn(); } catch (e) { toast(e.message, 'err'); } finally { hideLoad(); } }
+function openSheet(h) { $('#sheet').innerHTML = '<button class="x" onclick="closeSheet()">×</button>' + h; $('#sheetBg').style.display = 'flex'; }
+function closeSheet() { $('#sheetBg').style.display = 'none'; }
+$('#sheetBg').addEventListener('click', function (e) { if (e.target.id === 'sheetBg') closeSheet(); });
+function confirmBox(msg) {
+  return new Promise(function (res) {
+    openSheet('<h3>Konfirmasi</h3><p>' + esc(msg) + '</p><button class="btn" id="cOk">Ya, lanjutkan</button><button class="btn alt" id="cNo">Batal</button>');
+    $('#cOk').onclick = function () { closeSheet(); res(true); };
+    $('#cNo').onclick = function () { closeSheet(); res(false); };
+  });
+}
+function badge(st) { var k = st === 'TIDAK VALID' ? 'TIDAK' : st; return '<span class="badge b-' + esc(k) + '">' + esc(st === 'BELUM' ? 'Belum divalidasi' : st) + '</span>'; }
+function empty(t, s, btn) { return '<div class="card empty"><b>' + esc(t) + '</b>' + esc(s) + (btn || '') + '</div>'; }
+function today() { return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+
+async function go(name, arg, noPush) {
+  if (!noPush && S.cur && S.cur !== name) S.stack.push(S.cur);
+  S.cur = name;
+  var pg = PAGES[name], v = $('#view');
+  var tab = pg && pg.tab ? pg.tab : name;
+  document.querySelectorAll('#nav button').forEach(function (b) { b.classList.toggle('on', b.dataset.p === tab); });
+  $('#title').textContent = pg ? pg.title : 'ChefPlan Pro';
+  $('#hl').textContent = TABS.indexOf(name) >= 0 ? '☰' : '←';
+  v.scrollTop = 0;
+  if (!pg) { v.innerHTML = empty('Halaman belum dipasang', 'Halaman ini ada di file Halaman2.html. Pasang file tersebut lalu muat ulang aplikasi.'); return; }
+  v.innerHTML = '<div class="empty">Memuat...</div>';
+  try { await pg.render(v, arg); } catch (e) { v.innerHTML = empty('Terjadi kesalahan', e.message); }
+}
+function back() { var p = S.stack.pop(); go(p || 'beranda', null, true); }
+
+/* ===== Beranda ===== */
+PAGES.beranda = { title: 'ChefPlan Pro', async render(v) {
+  var d = await call('getDashboard'), c = d.siklusAktif, h = '';
+  if (c && !S.cid) S.cid = c.ID_Siklus;
+  if (d.kosong) {
+    h += '<div class="card"><h3>Mulai pengaturan</h3><ol class="list"><li>Buka <b>Lainnya → Database Menu</b> dan isi daftar masakan (minimal sesuai kebutuhan jarak pengulangan).</li><li>Tambahkan masakan non-protein <b>Nasi Kuning</b> dan <b>Mi Goreng</b> untuk sarapan Minggu.</li><li>Isi bahan baku dan resep agar food cost terhitung.</li><li>Buka <b>Rotasi → Generator</b> untuk membuat rotasi.</li></ol></div>';
+  }
+  if (c) {
+    var pct = Math.min(100, Math.round(d.hariTersusun / Number(c.Durasi_Hari) * 100));
+    h += '<div class="card hero"><h3>Siklus Aktif</h3><div style="font-size:18px;font-weight:700">' + esc(c.Nama) + '</div><div style="opacity:.85">Mulai ' + fmtD(c.Tgl_Mulai) + ' · ' + esc(c.Durasi_Hari) + ' hari · Status ' + esc(c.Status) + '</div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div><div style="display:flex;justify-content:space-between;align-items:center"><span>' + d.hariTersusun + ' dari ' + esc(c.Durasi_Hari) + ' hari tersusun</span>' + badge(d.statusValidasi === 'BELUM DIVALIDASI' ? 'BELUM' : d.statusValidasi) + '</div></div>';
+  } else if (!d.kosong) {
+    h += empty('Belum ada siklus', 'Buat rotasi pertama Anda di Generator Rotasi.');
+  }
+  h += '<div class="grid"><div class="tile" onclick="go(\'generator\')"><i>⚙️</i>Generator Rotasi</div><div class="tile" onclick="go(\'resep\')"><i>📖</i>Database Resep</div><div class="tile" onclick="go(\'bahan\')"><i>🧾</i>Kebutuhan Bahan</div><div class="tile" onclick="go(\'ekspor\')"><i>📤</i>Ekspor Laporan</div></div>' +
+    '<div class="card" style="margin-top:12px;display:flex;justify-content:space-around;text-align:center"><div><b style="font-size:22px;color:var(--navy)">' + d.jumlahMenuAktif + '</b><br><small>Masakan aktif</small></div><div><b style="font-size:22px;color:var(--navy)">' + d.jumlahBahan + '</b><br><small>Bahan baku</small></div></div>';
+  v.innerHTML = h;
+} };
+
+/* ===== Generator Rotasi ===== */
+PAGES.generator = { title: 'Generator Rotasi', tab: 'rotasi', async render(v) {
+  var st = await call('getSettings'), cs = await call('listCycles'), c = null;
+  if (S.cid) { c = cs.filter(function (x) { return x.ID_Siklus === S.cid; })[0] || null; if (!c) S.cid = null; }
+  var val = function (k, d) { return c ? c[k] : d; };
+  var opt = '<option value="">— Siklus baru —</option>' + cs.map(function (x) { return '<option value="' + esc(x.ID_Siklus) + '"' + (x.ID_Siklus === S.cid ? ' selected' : '') + '>' + esc(x.Nama) + ' (' + esc(x.Status) + ')</option>'; }).join('');
+  v.innerHTML = '<div class="card"><h3>Pengaturan Rotasi</h3>' +
+    '<label>Pilih siklus</label><select id="g_pick">' + opt + '</select>' +
+    '<label>Nama siklus menu</label><input id="g_nama" maxlength="60" value="' + esc(val('Nama', 'Menu ' + BLN_F[new Date().getMonth()] + ' ' + new Date().getFullYear())) + '">' +
+    '<div class="row2"><div><label>Tanggal mulai</label><input id="g_tgl" type="date" value="' + esc(val('Tgl_Mulai', today())) + '"></div><div><label>Durasi (hari)</label><input id="g_dur" type="number" min="1" max="62" value="' + esc(val('Durasi_Hari', st.cycle_days || 30)) + '"></div></div>' +
+    '<div class="row2"><div><label>Jumlah porsi</label><input id="g_por" type="number" min="1" value="' + esc(val('Porsi', st.default_portions || 250)) + '"></div><div><label>Buffer produksi (%)</label><input id="g_buf" type="number" min="0" max="50" step="0.5" value="' + esc(val('Buffer_Persen', st.buffer_percent || 3)) + '"></div></div>' +
+    '<label>Jarak minimal pengulangan (hari)</label><input id="g_jar" type="number" min="1" max="30" value="' + esc(val('Jarak_Ulang', st.min_repeat_days || 7)) + '">' +
+    (c ? '<p style="margin:10px 0 0">Status: ' + esc(c.Status) + '</p>' : '') +
+    '<button class="btn" data-a="buat">Buat Rotasi Otomatis</button>' +
+    '<div class="row2"><button class="btn alt" data-a="validasi">Validasi Rotasi</button><button class="btn alt" data-a="ulang">Generate Ulang</button></div>' +
+    '<div class="row2"><button class="btn alt" data-a="draf">Simpan Draf</button><button class="btn alt" data-a="kunci">Kunci Menu</button></div>' +
+    '<div class="row2"><button class="btn alt" data-a="buka">Buka Kunci Menu</button><button class="btn gold" data-a="setuju">Setujui Siklus</button></div></div>' +
+    '<div class="card"><h3>Aturan Generator</h3><ul class="list"><li><b>Sarapan:</b> ' + esc(st.protein_breakfast) + ' pilihan protein</li><li><b>Siang:</b> ' + esc(st.protein_lunch) + ' pilihan lauk protein</li><li><b>Malam:</b> ' + esc(st.protein_dinner) + ' pilihan lauk protein</li><li><b>Minggu (sarapan):</b> ' + esc(String(st.sunday_breakfast_fixed || '').split('|').join(' + ')) + ' + ' + esc(st.sunday_breakfast_protein) + ' protein</li><li><b>Jarak ulang:</b> ' + esc(st.min_repeat_days) + ' hari</li></ul></div>';
+  $('#g_pick').onchange = function () { S.cid = this.value || null; S.cycle = null; go('generator', null, true); };
+  v.querySelectorAll('button[data-a]').forEach(function (b) { b.onclick = function () { aksiGen(b.dataset.a); }; });
+} };
+
+function gData() {
+  return { Nama: $('#g_nama').value.trim(), Tgl_Mulai: $('#g_tgl').value, Durasi_Hari: +$('#g_dur').value, Porsi: +$('#g_por').value, Buffer_Persen: +$('#g_buf').value, Jarak_Ulang: +$('#g_jar').value };
+}
+async function aksiGen(a) {
+  var d = gData(), need = ['validasi', 'ulang', 'kunci', 'buka', 'setuju'];
+  if (need.indexOf(a) >= 0 && !S.cid) return toast('Buat atau pilih siklus terlebih dahulu.', 'err');
+  var r;
+  if (a === 'buat') {
+    if (S.cid && !(await confirmBox('Ini membuat siklus BARU, terpisah dari siklus yang sedang dipilih. Lanjutkan?'))) return;
+    r = await run(function () { return call('generateRotation', d); }, 'Menyusun rotasi...');
+    if (r) { S.cid = r.ID_Siklus; hasilGen(r); }
+  } else if (a === 'ulang') {
+    if (!(await confirmBox('Menu yang belum dikunci akan disusun ulang. Pilihan terkunci tetap dipertahankan.'))) return;
+    r = await run(function () { return call('generateRotation', Object.assign({ ID_Siklus: S.cid }, d)); }, 'Menyusun ulang...');
+    if (r) hasilGen(r);
+  } else if (a === 'validasi') {
+    r = await run(function () { return call('validateCycle', { ID_Siklus: S.cid }); }, 'Memvalidasi...');
+    if (r) showValidasi(r);
+  } else if (a === 'draf') {
+    r = await run(function () { return call('saveDraft', Object.assign({ ID_Siklus: S.cid || undefined }, d)); }, 'Menyimpan...');
+    if (r) { S.cid = r.ID_Siklus; toast('Draf tersimpan.', 'ok'); go('generator', null, true); }
+  } else {
+    var map = { kunci: 'Terkunci', buka: 'Draf', setuju: 'Disetujui' };
+    if (a === 'setuju' && !(await confirmBox('Setujui siklus ini? Setelah disetujui, menu tidak bisa diubah sebelum dibuka kuncinya.'))) return;
+    r = await run(function () { return call('setCycleStatus', { ID_Siklus: S.cid, Status: map[a] }); }, 'Memproses...');
+    if (r) { toast('Status siklus: ' + r.Status, 'ok'); go('generator', null, true); }
+  }
+}
+function hasilGen(r) {
+  var v = r.validasi, n = r.slotGagal;
+  openSheet('<h3>Hasil Penyusunan</h3><p>Status: ' + badge(v.status) + '</p>' +
+    (r.saran ? '<div class="card" style="background:#FFF7E0"><b>Perlu tambah masakan</b><br>' + esc(r.saran) + '</div>' : '') +
+    (n ? '<p>' + n + ' slot belum terisi karena aturan tidak bisa dipenuhi dengan database saat ini.</p>' : '<p>Semua slot terisi.</p>') +
+    '<button class="btn" onclick="closeSheet();go(\'rotasi\')">Lihat Kalender</button><button class="btn alt" onclick="closeSheetShowVal()">Rincian Validasi</button>');
+  S.lastVal = v;
+}
+function closeSheetShowVal() { showValidasi(S.lastVal); }
+function showValidasi(v) {
+  var h = '<h3>Validasi &amp; Notifikasi</h3><p>' + badge(v.status) + '</p>';
+  h += v.aturan.map(function (a) { return '<div class="menuitem"><i>' + (a.ok ? '✅' : '❌') + '</i><div>' + esc(a.nama) + '<small>' + (a.ok ? 'OK' : a.jumlah + ' masalah') + '</small></div></div>'; }).join('');
+  if (v.items.length) h += '<h3 style="margin-top:14px">Detail masalah</h3><ul class="list">' + v.items.slice(0, 40).map(function (x) { return '<li>' + (x.Tanggal ? '<b>' + fmtD(x.Tanggal) + '</b> ' : '') + esc(x.Pesan) + '</li>'; }).join('') + (v.items.length > 40 ? '<li>…dan ' + (v.items.length - 40) + ' lainnya</li>' : '') + '</ul>';
+  openSheet(h);
+}
+
+/* ===== Hasil Rotasi (kalender) ===== */
+PAGES.rotasi = { title: 'Hasil Rotasi 30 Hari', async render(v) {
+  if (!S.cid) { var cs = await call('listCycles'); if (cs.length) S.cid = cs[0].ID_Siklus; }
+  if (!S.cid) { v.innerHTML = empty('Belum ada rotasi', 'Buat dulu di Generator Rotasi.', '<button class="btn" onclick="go(\'generator\')">Buka Generator</button>'); return; }
+  S.data = await call('getCycle', { ID_Siklus: S.cid });
+  S.cycle = S.data.siklus;
+  drawRotasi(v);
+} };
+function names(a) { return a.length ? a.map(function (x, i) { return '<span class="it">' + (i ? '+ ' : '') + esc(x.Nama) + (x.Terkunci ? ' 🔒' : '') + '</span>'; }).join('') : '<span class="it" style="color:var(--bad)">kosong</span>'; }
+function drawRotasi(v) {
+  v = v || $('#view');
+  var c = S.cycle, hari = S.data.hari;
+  if (!hari.length) { v.innerHTML = empty('Rotasi masih kosong', 'Tekan Buat Rotasi Otomatis di Generator.', '<button class="btn" onclick="go(\'generator\')">Buka Generator</button>'); return; }
+  var m = hari[0].Tanggal.split('-'), h = '<div class="card"><h3>' + esc(c.Nama) + '</h3><div style="color:var(--mut)">' + BLN_F[+m[1] - 1] + ' ' + m[0] + ' · ' + hari.length + ' hari · Status ' + esc(c.Status) + '</div>' +
+    '<button class="btn alt sm" id="rVal">Validasi Ulang</button></div>' +
+    '<div class="tabs"><button data-m="tabel" class="' + (S.mode === 'tabel' ? 'on' : '') + '">Tabel</button><button data-m="kartu" class="' + (S.mode === 'kartu' ? 'on' : '') + '">Kartu</button></div>';
+  if (S.mode === 'tabel') {
+    h += '<div class="wrap"><table><thead><tr><th>Tanggal</th><th>Sarapan</th><th>Siang</th><th>Malam</th><th></th></tr></thead><tbody>' + hari.map(function (d) {
+      return '<tr class="tap' + (d.Minggu ? ' sun' : '') + '" data-t="' + d.Tanggal + '"><td class="d">' + d.Tanggal.slice(8) + '<small>' + esc(d.Hari.slice(0, 3)) + '</small></td><td>' + names(d['Sarapan']) + '</td><td>' + names(d['Makan Siang']) + '</td><td>' + names(d['Makan Malam']) + '</td><td><span class="dot ' + (d.Status === 'TIDAK VALID' ? 'TIDAK' : d.Status) + '"></span></td></tr>';
+    }).join('') + '</tbody></table></div>';
+  } else {
+    h += hari.map(function (d) {
+      return '<div class="card tap" data-t="' + d.Tanggal + '"' + (d.Minggu ? ' style="background:#FFF2B3"' : '') + '><div style="display:flex;justify-content:space-between"><b style="color:var(--navy)">' + esc(d.Hari) + ', ' + fmtD(d.Tanggal) + '</b>' + badge(d.Status) + '</div>' +
+        ['Sarapan', 'Makan Siang', 'Makan Malam'].map(function (k) { return '<div style="margin-top:6px"><small style="color:var(--mut)">' + k + '</small>' + names(d[k]) + '</div>'; }).join('') + '</div>';
+    }).join('');
+  }
+  v.innerHTML = h;
+  v.querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () { S.mode = b.dataset.m; drawRotasi(); }; });
+  v.querySelectorAll('[data-t]').forEach(function (r) { r.onclick = function () { openDay(r.dataset.t); }; });
+  $('#rVal').onclick = async function () { var r = await run(function () { return call('validateCycle', { ID_Siklus: S.cid }); }, 'Memvalidasi...'); if (r) { showValidasi(r); S.data = await call('getCycle', { ID_Siklus: S.cid }); drawRotasi(); } };
+}
+
+async function protMenus() {
+  if (!S.menu) { var l = await call('listMenu', { aktif: true }); S.menu = l.filter(function (m) { return m.Kategori_Protein !== 'Non-Protein' && m.Jenis_Hidangan !== 'Pendamping'; }); }
+  return S.menu;
+}
+async function openDay(tgl) {
+  var d = S.data.hari.filter(function (x) { return x.Tanggal === tgl; })[0], ml = await run(protMenus);
+  if (!d || !ml) return;
+  var h = '<h3>' + esc(d.Hari) + ', ' + fmtD(tgl) + '</h3><p>' + badge(d.Status) + (S.cycle.Status === 'Disetujui' ? ' <small>Siklus disetujui — buka kunci untuk mengubah.</small>' : '') + '</p>';
+  ['Sarapan', 'Makan Siang', 'Makan Malam'].forEach(function (k, mi) {
+    var items = d[k], ps = items.filter(function (x) { return x.Slot.charAt(0) === 'P'; }), lock = ps.length && ps.every(function (x) { return x.Terkunci; }), dis = S.cycle.Status === 'Disetujui' || lock;
+    h += '<div class="meal"><h4>' + k + (lock ? ' 🔒' : '') + '</h4>';
+    items.filter(function (x) { return x.Slot.charAt(0) !== 'P'; }).forEach(function (x) { h += '<div style="color:var(--mut)">' + esc(x.Nama) + '</div>'; });
+    ps.forEach(function (x, i) {
+      var has = ml.some(function (m) { return m.ID_Masakan === x.ID_Masakan; });
+      h += '<select data-meal="' + mi + '" ' + (dis ? 'disabled' : '') + ' style="margin-top:6px">' + (has ? '' : '<option value="' + esc(x.ID_Masakan) + '" selected>' + esc(x.Nama) + '</option>') +
+        ml.map(function (m) { return '<option value="' + esc(m.ID_Masakan) + '"' + (m.ID_Masakan === x.ID_Masakan ? ' selected' : '') + '>' + esc(m.Nama) + ' (' + esc(m.Kategori_Protein) + ')</option>'; }).join('') + '</select>';
+    });
+    if (ps.length && S.cycle.Status !== 'Disetujui') h += '<button class="btn sm" data-save="' + mi + '" ' + (lock ? 'disabled' : '') + '>Simpan</button><button class="btn alt sm" data-lock="' + mi + '">' + (lock ? 'Buka Kunci' : 'Kunci') + '</button>';
+    h += '</div>';
+  });
+  openSheet(h);
+  var meals = ['Sarapan', 'Makan Siang', 'Makan Malam'];
+  document.querySelectorAll('#sheet [data-save]').forEach(function (b) {
+    b.onclick = async function () {
+      var mi = +b.dataset.save, ids = Array.prototype.map.call(document.querySelectorAll('#sheet select[data-meal="' + mi + '"]'), function (s) { return s.value; });
+      var r = await run(function () { return call('editSlot', { ID_Siklus: S.cid, Tanggal: tgl, Waktu_Makan: meals[mi], ids: ids }); }, 'Menyimpan...');
+      if (r) { S.data = r.cycle; S.cycle = r.cycle.siklus; closeSheet(); drawRotasi(); toast('Tersimpan. Hasil validasi: ' + r.validasi.status, r.validasi.status === 'TIDAK VALID' ? 'err' : 'ok'); }
+    };
+  });
+  document.querySelectorAll('#sheet [data-lock]').forEach(function (b) {
+    b.onclick = async function () {
+      var mi = +b.dataset.lock, lockNow = b.textContent === 'Kunci';
+      var r = await run(function () { return call('toggleLockSlot', { ID_Siklus: S.cid, Tanggal: tgl, Waktu_Makan: meals[mi], Terkunci: lockNow }); });
+      if (r) { S.data = r; S.cycle = r.siklus; closeSheet(); drawRotasi(); toast(lockNow ? 'Terkunci.' : 'Kunci dibuka.', 'ok'); }
+    };
+  });
+}
+
+/* ===== Lainnya ===== */
+PAGES.lainnya = { title: 'Lainnya', async render(v) {
+  var L = [['menu', '🍽️', 'Database Menu', 'Kelola daftar masakan'], ['dbbahan', '🥩', 'Database Bahan', 'Bahan baku, harga, riwayat harga'], ['validasi', '✅', 'Validasi & Notifikasi', 'Cek semua aturan rotasi'], ['ekspor', '📤', 'Ekspor Data', 'Excel dan PDF'], ['pengaturan', '⚙️', 'Pengaturan', 'Aturan, periode, versi']];
+  v.innerHTML = '<div class="card">' + L.map(function (x) { return '<div class="menuitem" onclick="go(\'' + x[0] + '\')"><i>' + x[1] + '</i><div><b>' + x[2] + '</b><small>' + x[3] + '</small></div></div>'; }).join('') + '</div>';
+} };
+
+/* ===== Mulai ===== */
+$('#hl').onclick = function () { TABS.indexOf(S.cur) >= 0 ? go('lainnya') : back(); };
+document.querySelectorAll('#nav button').forEach(function (b) { b.onclick = function () { S.stack = []; go(b.dataset.p, null, true); }; });
+function mulai(p) { $('#splash').style.display = 'none'; $('#app').style.display = 'flex'; go(p || 'beranda', null, true); }
+$('#btnMulai').onclick = function () { mulai('beranda'); };
+$('#btnSet').onclick = function () { mulai('pengaturan'); };
+</script>
+
+<script>
+/* ===== Halaman2.html — melengkapi index.html (jangan dihapus) ===== */
+var KATS = ['Ayam', 'Daging Sapi', 'Ikan', 'Seafood', 'Telur', 'Bebek', 'Hati Ampela', 'Nabati', 'Non-Protein'];
+var UNITS = ['g', 'kg', 'ml', 'l', 'pcs', 'butir', 'pack'];
+function fld(id, l, v, t, x) { return '<label>' + l + '</label><input id="' + id + '" type="' + (t || 'text') + '" value="' + esc(v) + '" ' + (x || '') + '>'; }
+function sel(id, l, o, v) {
+  return (l ? '<label>' + l + '</label>' : '') + '<select id="' + id + '">' + o.map(function (x) {
+    var a = Array.isArray(x) ? x : [x, x];
+    return '<option value="' + esc(a[0]) + '"' + (String(a[0]) === String(v) ? ' selected' : '') + '>' + esc(a[1]) + '</option>';
+  }).join('') + '</select>';
+}
+function gv(id) { return $('#' + id).value; }
+function uniq(a, k) { var o = {}; a.forEach(function (x) { if (x[k]) o[x[k]] = 1; }); return Object.keys(o).sort(); }
+function needCycle(v) { v.innerHTML = empty('Belum ada siklus', 'Buat rotasi dulu di Generator Rotasi.', '<button class="btn" onclick="go(\'generator\')">Buka Generator</button>'); }
+async function ensureCycle() { if (!S.cid) { var c = await call('listCycles'); if (c.length) S.cid = c[0].ID_Siklus; } return S.cid; }
+
+/* ===== Database Menu ===== */
+PAGES.menu = { title: 'Database Menu', tab: 'lainnya', async render(v) {
+  var all = await call('listMenu', {});
+  v.innerHTML = '<input id="mq" placeholder="🔍 Cari masakan...">' +
+    '<div class="row2" style="margin-top:8px">' + sel('mk', '', [['', 'Semua kategori']].concat(KATS), '') + sel('mm', '', [['', 'Semua metode']].concat(uniq(all, 'Metode_Masak')), '') + '</div>' +
+    '<div style="margin-top:8px">' + sel('mj', '', [['', 'Semua jenis hidangan']].concat(uniq(all, 'Jenis_Hidangan')), '') + '</div>' +
+    '<button class="btn" id="mAdd">+ Tambah Masakan</button><div class="card" id="mList" style="margin-top:12px;padding:6px 10px"></div>';
+  function draw() {
+    var q = gv('mq').toLowerCase(), k = gv('mk'), m = gv('mm'), j = gv('mj');
+    var f = all.filter(function (x) { return (!q || x.Nama.toLowerCase().indexOf(q) >= 0) && (!k || x.Kategori_Protein === k) && (!m || x.Metode_Masak === m) && (!j || x.Jenis_Hidangan === j); });
+    $('#mList').innerHTML = f.length ? f.map(function (x) {
+      return '<div class="menuitem" data-id="' + esc(x.ID_Masakan) + '"><i>🍽️</i><div style="flex:1"><b>' + esc(x.Nama) + '</b><small>' + esc([x.Kategori_Protein, x.Jenis_Hidangan, x.Metode_Masak].filter(Boolean).join(' · ')) + '</small></div>' + (x.Aktif ? '' : '<span class="badge">Nonaktif</span>') + '</div>';
+    }).join('') : '<div class="empty">' + (all.length ? 'Tidak ada hasil.' : 'Belum ada masakan. Tekan + Tambah Masakan.') + '</div>';
+    $('#mList').querySelectorAll('[data-id]').forEach(function (e) { e.onclick = function () { formMenu(all.filter(function (x) { return x.ID_Masakan === e.dataset.id; })[0]); }; });
+  }
+  ['mq', 'mk', 'mm', 'mj'].forEach(function (i) { $('#' + i).oninput = draw; });
+  $('#mAdd').onclick = function () { formMenu(null); };
+  draw();
+} };
+var JENIS_LIST = ['Lauk', 'Sayur', 'Pendamping', 'Sup/Kuah', 'Rebusan', 'Karbohidrat', 'Pelengkap', 'Snack', 'Sambal', 'Dessert'];
+var METODE_LIST = ['', 'Berkuah/Santan', 'Goreng', 'Bakar/Panggang', 'Tumis/Saus', 'Kukus/Rebus'];
+var SAJIAN_LIST = ['Semua', 'Sarapan', 'Siang, Malam', 'Siang', 'Malam'];
+function tokGet(c, k) { var m = new RegExp('(?:^|[;|]\\s*)' + k + ':\\s*([^;|]+)', 'i').exec(c || ''); return m ? m[1].trim() : ''; }
+function tokSet(c, k, v) { var r = String(c || '').replace(new RegExp('(^|[;|]\\s*)' + k + ':\\s*[^;|]+', 'i'), '').replace(/^[;|\s]+|[;|\s]+$/g, ''); return v ? (r ? r + '; ' : '') + k + ': ' + v : r; }
+function opsi(list, cur) { return list.indexOf(cur) >= 0 || !cur ? list : list.concat([cur]); }
+async function tambahMenuBaru() { await go('menu'); formMenu(null); }
+function formMenu(m) {
+  m = m || { Aktif: true };
+  var cat = m.Catatan || '', gaya = tokGet(cat, 'Gaya') || (/Chinese/i.test(cat + ' ' + (m.Nama || '')) ? 'Chinese' : 'Nusantara');
+  var rest = tokSet(tokSet(tokSet(cat, 'Gaya', ''), 'Sup', ''), 'PIC', '');
+  openSheet('<h3>' + (m.ID_Masakan ? 'Edit Menu' : 'Tambah Menu Baru') + '</h3>' + fld('f_nama', 'Nama menu', m.Nama || '') + sel('f_kat', 'Kategori protein (Non-Protein untuk sayur, pendamping, snack, sup)', KATS, m.Kategori_Protein || 'Ayam') +
+    sel('f_jenis', 'Jenis hidangan', opsi(JENIS_LIST, m.Jenis_Hidangan), m.Jenis_Hidangan || 'Lauk') + sel('f_met', 'Metode masak', opsi(METODE_LIST, m.Metode_Masak), m.Metode_Masak || '') +
+    sel('f_saj', 'Disajikan pada', opsi(SAJIAN_LIST, m.Jenis_Sajian), m.Jenis_Sajian || 'Semua') + sel('f_gaya', 'Gaya masakan', ['Nusantara', 'Chinese'], gaya) +
+    sel('f_sup', 'Isi sup (hanya untuk jenis Sup/Kuah)', ['', 'ayam', 'daging', 'ikan', 'udang', 'telur', 'sayur'], tokGet(cat, 'Sup')) +
+    fld('f_pic', 'Penanggung jawab masak (PIC), mis. Chef Berto', tokGet(cat, 'PIC')) + fld('f_cat', 'Catatan lain', rest) +
+    '<button class="btn" id="fSave">Simpan</button>' + (m.ID_Masakan ? '<button class="btn alt" id="fTog">' + (m.Aktif ? 'Nonaktifkan' : 'Aktifkan kembali') + '</button><button class="btn bad" id="fDel">Hapus Menu Permanen</button><small>Menu yang masih dipakai di kalender tidak bisa dihapus. Pakai Nonaktifkan bila ragu.</small>' : ''));
+  if (m.ID_Masakan) $('#fDel').onclick = async function () {
+    if (!(await confirmBox('Hapus PERMANEN "' + m.Nama + '" beserta resepnya? Tindakan ini tidak bisa dibatalkan.'))) return;
+    var r = await run(function () { return call('hapusMenu', { ID_Masakan: m.ID_Masakan }); }, 'Menghapus...');
+    if (r) { S.menu = null; S.kd = null; toast('"' + r.Nama + '" dihapus.', 'ok'); go('menu', null, true); }
+  };
+  $('#fSave').onclick = async function () {
+    var c = tokSet(tokSet(tokSet(gv('f_cat'), 'Gaya', gv('f_gaya')), 'Sup', gv('f_jenis') === 'Sup/Kuah' ? gv('f_sup') : ''), 'PIC', gv('f_pic').trim());
+    var r = await run(function () { return call('saveMenu', { ID_Masakan: m.ID_Masakan, Nama: gv('f_nama'), Kategori_Protein: gv('f_kat'), Jenis_Hidangan: gv('f_jenis'), Metode_Masak: gv('f_met'), Jenis_Sajian: gv('f_saj'), Catatan: c, Aktif: m.Aktif }); }, 'Menyimpan...');
+    if (r) { S.menu = null; S.kd = null; closeSheet(); toast('Menu tersimpan. Jika menu baru, isi juga gramasinya di tab Resep.', 'ok'); go('menu', null, true); }
+  };
+  if (m.ID_Masakan) $('#fTog').onclick = async function () {
+    if (m.Aktif && !(await confirmBox('Nonaktifkan menu ini? Riwayat siklus lama tetap aman.'))) return;
+    var r = await run(function () { return call('toggleMenu', { ID_Masakan: m.ID_Masakan, aktif: !m.Aktif }); });
+    if (r) { S.menu = null; S.kd = null; closeSheet(); go('menu', null, true); }
+  };
+}
+
+/* ===== Resep Menu: nama menu + jumlah bahan per item ===== */
+PAGES.resep = { title: 'Resep Menu', async render(v) {
+  var all = (await call('listResepMenu', {})).filter(function (x) { return x.Aktif; }), f = 'semua';
+  v.innerHTML = '<input id="rq" placeholder="🔍 Cari menu..."><div class="tabs" style="margin-top:8px"><button data-f="semua" class="on">Semua</button><button data-f="ada">Ada resep</button><button data-f="kosong">Belum ada</button></div><div class="card" id="rList" style="padding:6px 10px"></div>';
+  function draw() {
+    var q = gv('rq').toLowerCase();
+    var l = all.filter(function (x) { return (!q || x.Nama.toLowerCase().indexOf(q) >= 0) && (f === 'semua' || (f === 'ada') === (x.nBahan > 0)); });
+    $('#rList').innerHTML = l.length ? l.slice(0, 200).map(function (x) {
+      return '<div class="menuitem" data-id="' + esc(x.ID_Masakan) + '"><i>🍲</i><div style="flex:1"><b>' + esc(x.Nama) + '</b><small>' + esc(x.Jenis || x.Kategori) + ' · ' + (x.nBahan ? x.nBahan + ' bahan' : 'belum ada resep') + '</small></div>' + (x.nBahan ? '' : '<span class="badge b-PERINGATAN">Isi</span>') + '</div>';
+    }).join('') + (l.length > 200 ? '<div class="empty">Menampilkan 200 pertama. Gunakan pencarian.</div>' : '') : '<div class="empty">Tidak ada menu.</div>';
+    $('#rList').querySelectorAll('[data-id]').forEach(function (e) { e.onclick = function () { run(function () { return openResepMenu(e.dataset.id); }); }; });
+  }
+  $('#rq').oninput = draw;
+  v.querySelectorAll('[data-f]').forEach(function (b) { b.onclick = function () { f = b.dataset.f; v.querySelectorAll('[data-f]').forEach(function (x) { x.classList.toggle('on', x === b); }); draw(); }; });
+  draw();
+} };
+function fmtJml(q, u) {
+  if (u === 'g') return q >= 1000 ? (Math.round(q / 10) / 100).toLocaleString('id-ID') + ' kg' : (Math.round(q * 10) / 10).toLocaleString('id-ID') + ' g';
+  if (u === 'ml') return q >= 1000 ? (Math.round(q / 10) / 100).toLocaleString('id-ID') + ' l' : (Math.round(q * 10) / 10).toLocaleString('id-ID') + ' ml';
+  return (u === 'butir' || u === 'pcs' ? Math.ceil(q - 1e-9) : Math.round(q * 100) / 100).toLocaleString('id-ID') + ' ' + u;
+}
+async function openResepMenu(id, porsi) {
+  var r = await call('getResepMenu', { ID_Masakan: id });
+  porsi = porsi || r.porsiDefault;
+  openSheet('<h3>' + esc(r.Nama) + '</h3>' + fld('rp', 'Jumlah porsi (untuk menghitung total bahan)', porsi, 'number', 'min="1"') + '<div id="rBody"></div><button class="btn" id="rAdd">+ Tambah bahan</button>');
+  function draw() {
+    var p = Math.max(1, +gv('rp') || 1);
+    $('#rBody').innerHTML = r.bahan.length ? '<div class="wrap" style="margin-top:10px"><table style="min-width:0"><thead><tr><th>Bahan</th><th>Per porsi</th><th>Total ' + p + ' porsi</th></tr></thead><tbody>' + r.bahan.map(function (b) {
+      return '<tr class="tap" data-d="' + esc(b.ID_Detail) + '"><td>' + esc(b.Nama) + '</td><td>' + (Math.round(b.Qty_Per_Porsi * 100) / 100) + ' ' + esc(b.Satuan) + '</td><td><b>' + fmtJml(b.Qty_Per_Porsi * p, b.Satuan) + '</b></td></tr>';
+    }).join('') + '</tbody></table></div><small>Ketuk baris untuk mengubah jumlah.</small>' : '<div class="empty">Belum ada bahan. Tekan + Tambah bahan.</div>';
+    $('#rBody').querySelectorAll('[data-d]').forEach(function (t) { t.onclick = function () { formBaris(r, r.bahan.filter(function (b) { return b.ID_Detail === t.dataset.d; })[0], Math.max(1, +gv('rp') || 1)); }; });
+  }
+  $('#rp').oninput = draw; draw();
+  $('#rAdd').onclick = function () { formBaris(r, null, Math.max(1, +gv('rp') || 1)); };
+}
+async function formBaris(r, b, porsi) {
+  var bh = await run(function () { return call('listBahan', { aktif: true }); });
+  if (!bh) return;
+  var unitDari = function (bhn) { return bhn.Satuan_Dasar === 'l' ? 'ml' : bhn.Satuan_Dasar === 'kg' ? 'g' : bhn.Satuan_Dasar; };
+  openSheet('<h3>' + (b ? 'Ubah jumlah bahan' : 'Tambah bahan') + ' — ' + esc(r.Nama) + '</h3>' +
+    sel('rb', 'Bahan', bh.map(function (x) { return [x.ID_Bahan, x.Nama]; }), b ? b.ID_Bahan : '') +
+    '<div class="row2"><div>' + fld('rqty', 'Jumlah per porsi', b ? b.Qty_Per_Porsi : '', 'number', 'step="any" min="0"') + '</div><div>' + sel('ru', 'Satuan', ['g', 'kg', 'ml', 'l', 'butir'], b ? b.Satuan : 'g') + '</div></div>' +
+    '<button class="btn" id="rbSave">Simpan</button>' + (b ? '<button class="btn bad" id="rbDel">Hapus bahan ini</button>' : '') + '<button class="btn alt" id="rbBack">Kembali</button>');
+  if (!b) $('#rb').onchange = function () { var x = bh.filter(function (y) { return y.ID_Bahan === gv('rb'); })[0]; if (x) $('#ru').value = unitDari(x); };
+  if (!b && bh.length) $('#ru').value = unitDari(bh[0]);
+  $('#rbBack').onclick = function () { run(function () { return openResepMenu(r.ID_Masakan, porsi); }); };
+  $('#rbSave').onclick = async function () {
+    var x = await run(function () { return call('saveResepDetail', { ID_Masakan: r.ID_Masakan, ID_Detail: b ? b.ID_Detail : undefined, ID_Bahan: gv('rb'), Qty_Per_Porsi: gv('rqty'), Satuan: gv('ru'), Edible_Yield_Persen: 100 }); }, 'Menyimpan...');
+    if (x) { toast('Resep tersimpan.', 'ok'); run(function () { return openResepMenu(r.ID_Masakan, porsi); }); }
+  };
+  if (b) $('#rbDel').onclick = async function () {
+    if (!(await confirmBox('Hapus bahan ini dari resep?'))) return;
+    var x = await run(function () { return call('deleteResepDetail', { ID_Detail: b.ID_Detail }); });
+    if (x) run(function () { return openResepMenu(r.ID_Masakan, porsi); });
+  };
+}
+
+/* ===== Database Bahan (tanpa harga) ===== */
+var KAT_BAHAN = ['Daging & Unggas', 'Ikan & Seafood', 'Telur', 'Tahu & Tempe', 'Sayuran', 'Bahan Pokok', 'Bumbu & Rempah', 'Lainnya'];
+PAGES.dbbahan = { title: 'Database Bahan', tab: 'lainnya', async render(v) {
+  var all = await call('listBahan', {});
+  v.innerHTML = '<input id="bq" placeholder="🔍 Cari bahan..."><button class="btn" id="bAdd">+ Tambah Bahan</button><div class="card" id="bList" style="margin-top:12px;padding:6px 10px"></div>';
+  function draw() {
+    var q = gv('bq').toLowerCase(), f = all.filter(function (x) { return x.Nama.toLowerCase().indexOf(q) >= 0; });
+    $('#bList').innerHTML = f.length ? f.map(function (x) {
+      return '<div class="menuitem" data-id="' + esc(x.ID_Bahan) + '"><i>🥩</i><div style="flex:1"><b>' + esc(x.Nama) + '</b><small>' + esc(x.Kategori || 'Lainnya') + ' · satuan ' + esc(x.Satuan_Dasar) + (x.Supplier ? ' · ' + esc(x.Supplier) : '') + '</small></div>' + (x.Aktif ? '' : '<span class="badge">Nonaktif</span>') + '</div>';
+    }).join('') : '<div class="empty">Belum ada bahan.</div>';
+    $('#bList').querySelectorAll('[data-id]').forEach(function (e) { e.onclick = function () { formBahan(all.filter(function (x) { return x.ID_Bahan === e.dataset.id; })[0]); }; });
+  }
+  $('#bq').oninput = draw; $('#bAdd').onclick = function () { formBahan(null); }; draw();
+} };
+function formBahan(b) {
+  b = b || { Aktif: true, Satuan_Dasar: 'kg', Kategori: 'Lainnya' };
+  openSheet('<h3>' + (b.ID_Bahan ? 'Edit Bahan' : 'Tambah Bahan') + '</h3>' + fld('b_nama', 'Nama bahan', b.Nama || '') + sel('b_kat', 'Kategori (untuk daftar supplier)', opsi(KAT_BAHAN, b.Kategori), b.Kategori || 'Lainnya') +
+    sel('b_sat', 'Satuan dasar (kg, l, atau butir)', opsi(UNITS, b.Satuan_Dasar), b.Satuan_Dasar) + fld('b_sup', 'Supplier', b.Supplier || '') +
+    sel('b_akt', 'Status', [['true', 'Aktif'], ['false', 'Nonaktif']], String(b.Aktif)) + '<button class="btn" id="bSave">Simpan</button>');
+  $('#bSave').onclick = async function () {
+    var r = await run(function () { return call('saveBahan', { ID_Bahan: b.ID_Bahan, Nama: gv('b_nama'), Kategori: gv('b_kat'), Satuan_Dasar: gv('b_sat'), Harga_Satuan: b.Harga_Satuan || 0, Supplier: gv('b_sup'), Aktif: gv('b_akt') === 'true' }); }, 'Menyimpan...');
+    if (r) { closeSheet(); toast('Bahan tersimpan.', 'ok'); go('dbbahan', null, true); }
+  };
+}
+
+/* ===== Validasi & Notifikasi ===== */
+PAGES.validasi = { title: 'Validasi & Notifikasi', tab: 'lainnya', async render(v) {
+  if (!(await ensureCycle())) return needCycle(v);
+  var r = await call('validateCycle', { ID_Siklus: S.cid }), ok = r.status === 'VALID';
+  var h = '<div class="card" style="background:' + (ok ? '#E6F6EC' : r.status === 'PERINGATAN' ? '#FFF7E0' : '#FDEBEB') + '"><b style="font-size:17px">' + (ok ? '✅ Rotasi Valid' : r.status === 'PERINGATAN' ? '⚠️ Ada Peringatan' : '❌ Rotasi Tidak Valid') + '</b><br>' + (ok ? 'Tidak ada konflik aturan yang ditemukan.' : r.items.length + ' temuan.') + '</div>';
+  h += '<div class="card"><h3>Detail Validasi</h3>' + r.aturan.map(function (a) { return '<div class="menuitem"><i>' + (a.ok ? '✅' : '❌') + '</i><div>' + esc(a.nama) + '<small>' + (a.ok ? 'OK' : a.jumlah + ' masalah') + '</small></div></div>'; }).join('') + '</div>';
+  if (r.items.length) h += '<div class="card"><h3>Daftar Temuan</h3><ul class="list">' + r.items.slice(0, 60).map(function (x) { return '<li>' + (x.Tanggal ? '<b>' + fmtD(x.Tanggal) + '</b> ' : '') + esc(x.Pesan) + '</li>'; }).join('') + '</ul></div>';
+  v.innerHTML = h + '<button class="btn alt" onclick="go(\'rotasi\')">Lihat Kalender</button>';
+} };
+
+/* ===== Kebutuhan Bahan per menu per hari (tab Bahan) — tanpa harga ===== */
+function tglPlus(t, n) { var a = String(t).split('-'); return new Date(Date.UTC(+a[0], +a[1] - 1, +a[2] + n)).toISOString().slice(0, 10); }
+function opsiMinggu(c) {
+  var n = Math.ceil(Number(c.Durasi_Hari) / 7), o = [];
+  for (var k = 1; k <= n; k++) o.push([k, 'Minggu ' + k + ' (' + fmtD(tglPlus(c.Tgl_Mulai, (k - 1) * 7)) + ' – ' + fmtD(tglPlus(c.Tgl_Mulai, Math.min(k * 7, Number(c.Durasi_Hari)) - 1)) + ')']);
+  return o;
+}
+function akhirSiklus(c) { return tglPlus(c.Tgl_Mulai, Number(c.Durasi_Hari) - 1); }
+function akhir3Hari(c, mulai) { var e = tglPlus(mulai, 2), a = akhirSiklus(c); return e > a ? a : e; }
+function awal3Hari(c) { var t = today(); return t >= String(c.Tgl_Mulai) && t <= akhirSiklus(c) ? t : String(c.Tgl_Mulai); }
+function opsi3Hari(c) {
+  var o = [];
+  for (var k = 0; k < Number(c.Durasi_Hari); k++) { var a = tglPlus(c.Tgl_Mulai, k); o.push([a, '3 hari: ' + fmtD(a) + ' – ' + fmtD(akhir3Hari(c, a))]); }
+  return o;
+}
+function teksRekap(d) {
+  var t = 'KEBUTUHAN BAHAN — ' + d.siklus.Nama + '\nPeriode ' + fmtD(d.dari) + ' – ' + fmtD(d.sampai) + '\n(' + d.porsi + ' porsi, sudah termasuk buffer ' + d.bufferPersen + '%)\n';
+  d.rekap.forEach(function (g) { t += '\n*' + g.kategori.toUpperCase() + '*\n'; g.bahan.forEach(function (b) { t += '- ' + b.Nama + ': ' + b.Jumlah.toLocaleString('id-ID') + ' ' + b.Satuan + '\n'; }); });
+  return t + '\nRincian per hari dan per menu ada di file PDF/Excel.';
+}
+PAGES.bahan = { title: 'Kebutuhan Bahan', async render(v) {
+  var cs = await call('listCycles');
+  if (!cs.length) return needCycle(v);
+  var sid = S.bsid && cs.some(function (c) { return c.ID_Siklus === S.bsid; }) ? S.bsid : (S.cid && cs.some(function (c) { return c.ID_Siklus === S.cid; }) ? S.cid : cs[0].ID_Siklus);
+  var cur = cs.filter(function (c) { return c.ID_Siklus === sid; })[0], mg = Math.min(S.bmg || 1, Math.ceil(Number(cur.Durasi_Hari) / 7)), mode = S.bmode || '7';
+  v.innerHTML = '<div class="card">' + sel('bl_s', 'Siklus menu', cs.map(function (c) { return [c.ID_Siklus, c.Nama]; }), sid) + sel('bl_mode', 'Lama periode', [['7', '7 hari (per minggu)'], ['3', '3 hari (belanja sayur)']], mode) + sel('bl_m', 'Periode', mode === '3' ? opsi3Hari(cur) : opsiMinggu(cur), mode === '3' ? (S.b3 || awal3Hari(cur)) : mg) + '<button class="btn" id="blGo">Tampilkan Kebutuhan Bahan</button></div><div id="blRes"></div>';
+  $('#bl_s').onchange = function () { S.bsid = this.value; S.bmg = 1; S.b3 = null; go('bahan', null, true); };
+  $('#bl_mode').onchange = function () { S.bmode = this.value; go('bahan', null, true); };
+  $('#blGo').onclick = async function () {
+    S.bsid = gv('bl_s');
+    if (gv('bl_mode') === '3') { S.b3 = gv('bl_m'); S.bper = { dari: S.b3, sampai: akhir3Hari(cur, S.b3) }; } else { S.bmg = +gv('bl_m'); S.bper = { minggu: S.bmg }; }
+    var d = await run(function () { return call('rencanaBahan', Object.assign({ ID_Siklus: S.bsid }, S.bper)); }, 'Menghitung kebutuhan bahan...');
+    if (!d) return;
+    S.bl = d;
+    var h = '';
+    if (d.tanpaGramasi.length) h += '<div class="card" style="background:#FFF7E0;font-size:13px"><b>Gramasi belum lengkap</b><br>' + d.tanpaGramasi.length + ' menu belum punya resep: ' + d.tanpaGramasi.slice(0, 6).map(esc).join(', ') + '. Isi di tab Resep.</div>';
+    h += '<div class="card"><b>' + esc(d.siklus.Nama) + '</b><br><small>' + fmtD(d.dari) + ' – ' + fmtD(d.sampai) + ' · ' + d.porsi + ' porsi per sesi · termasuk buffer ' + d.bufferPersen + '% · nasi putih ikut dihitung di lunch dan dinner</small>' +
+      '<div class="row2"><button class="btn sm" id="blPdf">PDF</button><button class="btn alt sm" id="blXls">Excel</button></div><div class="row2"><button class="btn alt sm" id="blCp">Salin Teks</button><button class="btn alt sm" id="blWa">WhatsApp</button></div><div id="blFile"></div></div>';
+    h += '<div class="card"><h3>Rekap untuk Supplier</h3>' + d.rekap.map(function (g) {
+      return '<div style="margin-top:8px"><b style="color:var(--blue)">' + esc(g.kategori) + '</b>' + g.bahan.map(function (b) {
+        return '<div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:5px 0"><span>' + esc(b.Nama) + '</span><b>' + b.Jumlah.toLocaleString('id-ID') + ' ' + esc(b.Satuan) + '</b></div>';
+      }).join('') + '</div>';
+    }).join('') + '</div><h3 style="margin:14px 2px 6px;color:var(--navy)">Rincian per Hari dan per Menu</h3>';
+    h += d.hari.map(function (hr, i) {
+      return '<details class="card" ' + (i === 0 ? 'open' : '') + '><summary style="font-weight:700;color:var(--navy)">' + esc(hr.Hari) + ', ' + fmtD(hr.Tanggal) + '</summary>' + hr.sesi.map(function (se) {
+        return '<div class="meal"><h4>' + esc(se.nama) + '</h4>' + se.menu.map(function (m) {
+          return '<div style="margin:8px 0"><b>' + esc(m.Nama) + '</b>' + (m.PIC ? ' <small style="color:var(--mut)">(' + esc(m.PIC) + ')</small>' : '') + (m.adaResep ? '' : ' <small style="color:var(--bad)">gramasi belum ada</small>') +
+            m.bahan.map(function (b) { return '<div style="display:flex;justify-content:space-between;font-size:13px;color:#334155"><span>' + esc(b.Nama) + ' <small style="color:var(--mut)">' + esc(b.PerPorsi) + '</small></span><span>' + b.Total.Jumlah.toLocaleString('id-ID') + ' ' + esc(b.Total.Satuan) + '</span></div>'; }).join('') + '</div>';
+        }).join('') + '</div>';
+      }).join('') + '</details>';
+    }).join('');
+    $('#blRes').innerHTML = h;
+    var ekspor = async function (f) {
+      var r = await run(function () { return call('exportRencanaBahan', Object.assign({ ID_Siklus: S.bsid, format: f }, S.bper)); }, 'Membuat file...');
+      if (r) $('#blFile').innerHTML = '<div style="margin-top:8px;background:#E6F6EC;border-radius:10px;padding:8px"><b>File siap ✅</b><br><small>' + esc(r.nama) + ' (folder Drive “ChefPlan Pro Export”)</small><a class="btn" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="' + esc(r.url) + '">Buka File</a></div>';
+    };
+    $('#blPdf').onclick = function () { ekspor('pdf'); };
+    $('#blXls').onclick = function () { ekspor('xlsx'); };
+    $('#blCp').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(teksRekap(S.bl)) : Promise.reject()).then(function () { toast('Teks kebutuhan bahan disalin.', 'ok'); }, function () { toast('Gagal menyalin. Gunakan tombol WhatsApp.', 'err'); }); };
+    $('#blWa').onclick = function () { window.open('https://wa.me/?text=' + encodeURIComponent(teksRekap(S.bl)), '_blank'); };
+  };
+} };
+
+/* ===== Ekspor ===== */
+PAGES.ekspor = { title: 'Ekspor Data', tab: 'lainnya', async render(v) {
+  var cs = await call('listCycles');
+  if (!cs.length) return needCycle(v);
+  var cur = cs.filter(function (c) { return c.ID_Siklus === S.cid; })[0] || cs[0];
+  v.innerHTML = '<div class="card">' + sel('e_s', 'Siklus menu', cs.map(function (c) { return [c.ID_Siklus, c.Nama]; }), cur.ID_Siklus) +
+    sel('e_l', 'Laporan', [['menu', 'Menu rotasi (lengkap dengan PIC & snack box)'], ['bahan', 'Kebutuhan bahan per menu per hari (untuk supplier)']], 'menu') +
+    '<div class="row2"><div>' + sel('e_f', 'Format', [['pdf', 'PDF (siap cetak)'], ['xlsx', 'Excel (.xlsx)']], 'pdf') + '</div><div id="e_mgBox">' + sel('e_mg', 'Periode bahan', opsiMinggu(cur), 1) + '</div></div>' +
+    '<div class="row2"><div>' + fld('e_d', 'Menu: dari tanggal', '', 'date') + '</div><div>' + fld('e_t', 'Menu: sampai tanggal', '', 'date') + '</div></div><small>Kosongkan tanggal untuk seluruh siklus. Laporan menu berformat A4 landscape.</small>' +
+    '<button class="btn" id="eGo">Ekspor Sekarang</button></div><div id="eRes"></div>';
+  $('#e_s').onchange = function () { S.cid = this.value; go('ekspor', null, true); };
+  $('#eGo').onclick = async function () {
+    var lap = gv('e_l'), r = await run(function () {
+      return lap === 'bahan' ? call('exportRencanaBahan', { ID_Siklus: gv('e_s'), minggu: +gv('e_mg'), format: gv('e_f') })
+        : call('exportFile', { ID_Siklus: gv('e_s'), laporan: 'menu', format: gv('e_f'), orientasi: 'landscape', dari: gv('e_d') || undefined, sampai: gv('e_t') || undefined });
+    }, 'Membuat file...');
+    if (r) $('#eRes').innerHTML = '<div class="card" style="background:#E6F6EC"><b>File siap ✅</b><br>' + esc(r.nama) + '<br><small>Tersimpan di Google Drive, folder “ChefPlan Pro Export”.</small>' +
+      '<a class="btn" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="' + esc(r.url) + '">Buka File</a><a class="btn alt" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="' + esc(r.downloadUrl) + '">Unduh</a></div>';
+  };
+} };
+
+/* ===== Pengaturan ===== */
+var SET_FIELDS = [['app_name', 'Nama aplikasi'], ['company_name', 'Nama perusahaan / kantin (kop laporan)'], ['cycle_days', 'Durasi rotasi (hari)', 'number'], ['min_repeat_days', 'Jarak pengulangan lauk (hari)', 'number'], ['buffer_percent', 'Buffer produksi (%)', 'number'], ['default_portions', 'Jumlah porsi per sesi (default)', 'number']];
+PAGES.pengaturan = { title: 'Pengaturan', tab: 'lainnya', async render(v) {
+  var s = await call('getSettings');
+  v.innerHTML = '<div class="card"><h3>Pengaturan</h3>' + SET_FIELDS.map(function (f) { return fld('s_' + f[0], f[1], s[f[0]] || '', f[2] || 'text', f[2] ? 'min="0" step="any"' : ''); }).join('') + '<button class="btn" id="sSave">Simpan Pengaturan</button><small>Aturan menu (sarapan, lauk, daging, snack, PIC) diatur di bagian ATURAN pada Generator.gs.</small></div>' +
+    '<div class="card" style="text-align:center"><img src="' + (window.LOGO || '') + '" alt="ChefPlan Pro" style="width:min(70vw,260px);height:auto"><p style="margin:6px 0 0">Versi 2.0 · by <b>Chef Berto Leumara</b></p></div>' +
+    '<div class="card"><h3>Backup &amp; Panduan</h3><ul class="list"><li>Seluruh data ada di Google Sheets <b>CHEFPLAN_PRO_DATABASE</b> pada Google Drive Anda.</li><li>Backup: buka file itu di Drive → Buat salinan (tiap akhir siklus).</li><li>Hasil ekspor tersimpan di folder <b>ChefPlan Pro Export</b>.</li><li>Jangan mengubah baris judul atau kolom ID di spreadsheet.</li><li>Setelah mengubah kode, buat versi deployment baru.</li></ul></div>';
+  $('#sSave').onclick = async function () {
+    var p = {}; SET_FIELDS.forEach(function (f) { p[f[0]] = gv('s_' + f[0]); });
+    var r = await run(function () { return call('saveSettings', p); }, 'Menyimpan...');
+    if (r) toast('Pengaturan tersimpan. Berlaku untuk rotasi berikutnya.', 'ok');
+  };
+} };
+
+/* ===== Menu "Lainnya" ===== */
+PAGES.lainnya = { title: 'Lainnya', async render(v) {
+  var L = [['tambah', '➕', 'Tambah Menu Baru', 'Daftarkan menu yang belum ada di database'], ['menu', '🍽️', 'Database Menu', 'Cari, edit, atau nonaktifkan menu'], ['dbbahan', '🥩', 'Database Bahan', 'Daftar bahan baku dan supplier'], ['validasi', '✅', 'Validasi & Notifikasi', 'Cek semua aturan rotasi'], ['ekspor', '📤', 'Ekspor Data', 'Menu rotasi dan kebutuhan bahan (PDF/Excel)'], ['pengaturan', '⚙️', 'Pengaturan', 'Periode, porsi, buffer, versi']];
+  v.innerHTML = '<div class="card">' + L.map(function (x, i) { return '<div class="menuitem" data-k="' + x[0] + '"><i>' + x[1] + '</i><div><b>' + x[2] + '</b><small>' + x[3] + '</small></div></div>'; }).join('') + '</div>';
+  v.querySelectorAll('[data-k]').forEach(function (e) { e.onclick = function () { e.dataset.k === 'tambah' ? tambahMenuBaru() : go(e.dataset.k); }; });
+} };
+
+/* ===== Perbaikan navigasi: halaman yang lambat dimuat tidak boleh menimpa halaman yang sudah dibuka ===== */
+go = async function (name, arg, noPush) {
+  if (!noPush && S.cur && S.cur !== name) S.stack.push(S.cur);
+  S.cur = name;
+  var token = S.navToken = (S.navToken || 0) + 1;
+  var pg = PAGES[name], v = $('#view'), tab = pg && pg.tab ? pg.tab : name;
+  document.body.setAttribute('data-tab', tab);   // warna latar mengikuti tab
+  document.querySelectorAll('#nav button').forEach(function (b) { b.classList.toggle('on', b.dataset.p === tab); });
+  $('#title').textContent = pg ? pg.title : 'ChefPlan Pro';
+  $('#hl').textContent = TABS.indexOf(name) >= 0 ? '☰' : '←';
+  v.scrollTop = 0;
+  if (!pg) { v.innerHTML = empty('Halaman belum dipasang', 'Halaman ini belum tersedia. Muat ulang aplikasi.'); return; }
+  var box = document.createElement('div');
+  box.innerHTML = '<div class="empty">Memuat...</div>';
+  v.innerHTML = ''; v.appendChild(box);
+  try { await pg.render(box, arg); }
+  catch (e) { if (token === S.navToken) box.innerHTML = empty('Terjadi kesalahan', e.message); }
+};
+
+/* ===== Tampilan rotasi v2: PIC, kolom Snack Box, penggantian menu per item ===== */
+var MEALS4 = ['Sarapan', 'Makan Siang', 'Makan Malam', 'Snack Box'];
+names = function (a) {
+  return a.length ? a.map(function (x, i) {
+    return '<span class="it">' + (i ? '+ ' : '') + esc(x.Nama) + (x.PIC ? ' <small style="color:var(--mut)">(' + esc(x.PIC) + ')</small>' : '') + (x.Terkunci ? ' 🔒' : '') + '</span>';
+  }).join('') : '<span class="it" style="color:var(--bad)">kosong</span>';
+};
+drawRotasi = function (v) {
+  v = v || $('#view');
+  var c = S.cycle, hari = S.data.hari;
+  if (!hari.length) { v.innerHTML = empty('Rotasi masih kosong', 'Tekan Buat Rotasi Otomatis di Generator.', '<button class="btn" onclick="go(\'generator\')">Buka Generator</button>'); return; }
+  var m = hari[0].Tanggal.split('-'), adaSnack = hari.some(function (d) { return d['Snack Box'].length; });
+  var h = '<div class="card"><h3>' + esc(c.Nama) + '</h3><div style="color:var(--mut)">' + BLN_F[+m[1] - 1] + ' ' + m[0] + ' · ' + hari.length + ' hari · Status ' + esc(c.Status) + '</div>' +
+    '<button class="btn alt sm" id="rVal">Validasi Ulang</button><button class="btn bad sm" id="rDel">Hapus Rotasi</button></div>' +
+    '<div class="tabs"><button data-m="tabel" class="' + (S.mode === 'tabel' ? 'on' : '') + '">Tabel</button><button data-m="kartu" class="' + (S.mode === 'kartu' ? 'on' : '') + '">Kartu</button></div>';
+  if (S.mode === 'tabel') {
+    h += '<div class="wrap"><table style="min-width:' + (adaSnack ? 980 : 760) + 'px"><thead><tr><th>Tanggal</th><th>Sarapan</th><th>Siang</th><th>Malam</th>' + (adaSnack ? '<th>Snack Box</th>' : '') + '<th></th></tr></thead><tbody>' + hari.map(function (d) {
+      return '<tr class="tap' + (d.Minggu ? ' sun' : '') + '" data-t="' + d.Tanggal + '"><td class="d">' + d.Tanggal.slice(8) + '<small>' + esc(d.Hari.slice(0, 3)) + '</small></td><td>' + names(d['Sarapan']) + '</td><td>' + names(d['Makan Siang']) + '</td><td>' + names(d['Makan Malam']) + '</td>' +
+        (adaSnack ? '<td>' + (d['Snack Box'].length ? names(d['Snack Box']) : '') + '</td>' : '') + '<td><span class="dot ' + (d.Status === 'TIDAK VALID' ? 'TIDAK' : d.Status) + '"></span></td></tr>';
+    }).join('') + '</tbody></table></div>';
+  } else {
+    h += hari.map(function (d) {
+      return '<div class="card tap" data-t="' + d.Tanggal + '"' + (d.Minggu ? ' style="background:#FFF2B3"' : '') + '><div style="display:flex;justify-content:space-between"><b style="color:var(--navy)">' + esc(d.Hari) + ', ' + fmtD(d.Tanggal) + '</b>' + badge(d.Status) + '</div>' +
+        MEALS4.filter(function (k) { return d[k].length; }).map(function (k) { return '<div style="margin-top:6px"><small style="color:var(--mut)">' + k + '</small>' + names(d[k]) + '</div>'; }).join('') + '</div>';
+    }).join('');
+  }
+  v.innerHTML = h;
+  v.querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () { S.mode = b.dataset.m; drawRotasi(); }; });
+  v.querySelectorAll('[data-t]').forEach(function (r) { r.onclick = function () { openDay(r.dataset.t); }; });
+  $('#rVal').onclick = async function () { var r = await run(function () { return call('validateCycle', { ID_Siklus: S.cid }); }, 'Memvalidasi...'); if (r) { showValidasi(r); S.data = await call('getCycle', { ID_Siklus: S.cid }); drawRotasi(); } };
+  $('#rDel').onclick = function () { hapusRotasi(c); };
+};
+async function kandidat() { if (!S.kd) S.kd = await call('kandidatMenu'); return S.kd; }
+openDay = async function (tgl) {
+  var d = S.data.hari.filter(function (x) { return x.Tanggal === tgl; })[0], kd = await run(kandidat);
+  if (!d || !kd) return;
+  var kolam = { P: 'lauk', V: 'sayur', D: 'pendamping', R: 'rebusan', K: 'karbo', N: 'snack' }, dis = S.cycle.Status === 'Disetujui';
+  var h = '<h3>' + esc(d.Hari) + ', ' + fmtD(tgl) + '</h3><p>' + badge(d.Status) + (dis ? ' <small>Siklus disetujui — buka kunci untuk mengubah.</small>' : '') + '</p>';
+  MEALS4.forEach(function (meal, mi) {
+    var items = d[meal];
+    if (!items.length) return;
+    var lock = items.every(function (x) { return x.Terkunci; });
+    h += '<div class="meal"><h4>' + meal + (lock ? ' 🔒' : '') + '</h4>';
+    items.forEach(function (x) {
+      var c = x.Slot.charAt(0), off = dis || x.Terkunci || c === 'F';
+      var pool = (kd[kolam[c]] || []).filter(function (o) { return c !== 'P' ? true : (meal === 'Sarapan' ? ['Ayam', 'Telur'].indexOf(o.Kategori) >= 0 : o.Kelompok === x.Kelompok); });
+      var ada = pool.some(function (o) { return o.ID_Masakan === x.ID_Masakan; });
+      h += '<div style="margin-top:8px"><select data-row="' + esc(x.ID_Rotasi) + '" data-awal="' + esc(x.ID_Masakan) + '" ' + (off ? 'disabled' : '') + '>' +
+        (ada ? '' : '<option value="' + esc(x.ID_Masakan) + '" selected>' + esc(x.Nama) + '</option>') +
+        pool.map(function (o) { return '<option value="' + esc(o.ID_Masakan) + '"' + (o.ID_Masakan === x.ID_Masakan ? ' selected' : '') + '>' + esc(o.Nama) + '</option>'; }).join('') + '</select>';
+      if (meal === 'Makan Siang' || meal === 'Makan Malam') {
+        h += '<select data-pic="' + esc(x.ID_Rotasi) + '" data-awalpic="' + esc(x.PIC) + '" ' + (dis ? 'disabled' : '') + ' style="margin-top:4px"><option value="">— Penanggung jawab —</option>' +
+          kd.tim.map(function (t) { return '<option value="' + esc(t) + '"' + (t === x.PIC ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select>';
+      }
+      h += '</div>';
+    });
+    if (!dis) h += '<button class="btn sm" data-save="' + mi + '">Simpan</button><button class="btn alt sm" data-lock="' + mi + '">' + (lock ? 'Buka Kunci' : 'Kunci') + '</button>';
+    h += '</div>';
+  });
+  if (!dis) h += '<label style="margin-top:12px"><input type="checkbox" id="picTetap" style="width:auto;min-height:0"> Jadikan PIC tetap untuk menu ini</label>';
+  openSheet(h);
+  document.querySelectorAll('#sheet [data-save]').forEach(function (b) {
+    b.onclick = async function () {
+      var box = b.parentNode, tetap = $('#picTetap') && $('#picTetap').checked, edits = [], last = null;
+      box.querySelectorAll('select[data-row]').forEach(function (s) { if (!s.disabled && s.value !== s.dataset.awal) edits.push(['editSlot', { ID_Rotasi: s.dataset.row, ID_Masakan: s.value }]); });
+      box.querySelectorAll('select[data-pic]').forEach(function (s) { if (!s.disabled && s.value !== s.dataset.awalpic) edits.push(['setPic', { ID_Rotasi: s.dataset.pic, PIC: s.value, tetap: tetap }]); });
+      if (!edits.length) return toast('Tidak ada perubahan.');
+      var ok = await run(async function () { for (var k = 0; k < edits.length; k++) { var r = await call(edits[k][0], edits[k][1]); last = r.cycle || r; } return true; }, 'Menyimpan...');
+      if (ok && last) { S.data = last; S.cycle = last.siklus; closeSheet(); drawRotasi(); toast('Tersimpan. Jalankan Validasi Ulang untuk memeriksa aturan.', 'ok'); }
+    };
+  });
+  document.querySelectorAll('#sheet [data-lock]').forEach(function (b) {
+    b.onclick = async function () {
+      var lockNow = b.textContent === 'Kunci';
+      var r = await run(function () { return call('toggleLockSlot', { ID_Siklus: S.cid, Tanggal: tgl, Waktu_Makan: MEALS4[+b.dataset.lock], Terkunci: lockNow }); });
+      if (r) { S.data = r; S.cycle = r.siklus; closeSheet(); drawRotasi(); toast(lockNow ? 'Terkunci.' : 'Kunci dibuka.', 'ok'); }
+    };
+  });
+};
+
+/* ===== Generator: kartu aturan baru + info pembawaan menu bulan lalu ===== */
+(function () {
+  var asli = PAGES.generator.render;
+  PAGES.generator.render = async function (v) {
+    await asli(v);
+    var pilih = $('#g_pick'), opt = pilih && pilih.options[pilih.selectedIndex];
+    if (S.cid && opt && opt.value) {
+      var m = /^(.*) \((Draf|Terkunci|Disetujui)\)$/.exec(opt.textContent) || [null, opt.textContent, ''];
+      var tombol = v.querySelector('button[data-a="setuju"]');
+      if (tombol) {
+        tombol.parentNode.insertAdjacentHTML('afterend', '<button class="btn bad" id="gDel">Hapus Rotasi Ini</button>');
+        $('#gDel').onclick = function () { hapusRotasi({ ID_Siklus: S.cid, Nama: m[1], Status: m[2] }); };
+      }
+    }
+    var cards = v.querySelectorAll('.card'), last = cards[cards.length - 1];
+    if (last && /Aturan Generator/.test(last.textContent)) last.innerHTML = '<h3>Aturan Generator</h3><ul class="list">' +
+      '<li><b>Sarapan:</b> 1 karbo, 1 lauk (ayam/telur), 1 sayur, 2 rebusan. <b>Minggu:</b> Nasi Kuning + Mie Goreng + 1 lauk + rebusan. <b>Jumat:</b> paket Bubur Ayam.</li>' +
+      '<li><b>Lunch &amp; Dinner:</b> 3 lauk hewani (1 berkuah, 1 goreng, 1 tumisan; sup/bakso dihitung lauk) + 1 sayur + 1 pendamping, ada Indonesian &amp; Chinese. Tiap menu punya penanggung jawab masak.</li>' +
+      '<li><b>Daging:</b> 3x per minggu, berkuah atau tumisan.</li><li><b>Snack box:</b> Selasa &amp; Sabtu.</li>' +
+      '<li><b>Rotasi:</b> Minggu 1 = Minggu 3 = Minggu 5, Minggu 2 = Minggu 4. Siklus berikutnya membawa 50% menu bulan sebelumnya.</li></ul>';
+  };
+  var hg = hasilGen;
+  hasilGen = function (r) {
+    hg(r);
+    var info = r.bawa ? 'Menu dibawa dari <b>' + esc(r.bawa.dari) + '</b>: sekitar ' + r.bawa.persen + '% (sisanya menu baru).' : 'Belum ada siklus bulan sebelumnya, semua menu disusun baru.';
+    $('#sheet').insertAdjacentHTML('beforeend', '<p style="margin-top:12px"><small>' + info + '</small></p>');
+  };
+})();
+
+/* ===== Header: tulisan kecil "by Chef Berto Leumara" di bawah judul, tampil di SEMUA halaman ===== */
+(function () {
+  var h = $('#title');
+  if (!h || $('#sub')) return;
+  var wrap = document.createElement('div');
+  wrap.style.flex = '1';
+  h.parentNode.insertBefore(wrap, h);
+  wrap.appendChild(h);
+  var sub = document.createElement('div');
+  sub.id = 'sub';
+  sub.textContent = 'by Chef Berto Leumara';
+  sub.style.cssText = 'font-size:12px;opacity:.9;margin-top:1px;line-height:1.2';
+  wrap.appendChild(sub);
+})();
+
+/* ===== Tab "Hari Ini": menu yang diolah hari ini + kebutuhan bahannya ===== */
+function siklusUntuk(cs, tgl) {
+  var cocok = cs.filter(function (c) { return String(c.Tgl_Mulai) <= tgl && tgl <= akhirSiklus(c); });
+  return cocok.filter(function (c) { return c.Status === 'Disetujui'; })[0] || cocok[0] || null;
+}
+function teksHariIni(d, h) {
+  var t = 'MENU HARI INI — ' + h.Hari + ', ' + fmtD(h.Tanggal) + '\n' + d.siklus.Nama + ' (' + d.porsi + ' porsi, buffer ' + d.bufferPersen + '%)\n';
+  h.sesi.forEach(function (s) { t += '\n*' + s.nama.toUpperCase() + '*\n'; s.menu.forEach(function (m) { t += '- ' + m.Nama + (m.PIC ? ' (' + m.PIC + ')' : '') + '\n'; }); });
+  t += '\n*TOTAL BAHAN HARI INI*\n';
+  d.rekap.forEach(function (g) { t += g.kategori + ':\n'; g.bahan.forEach(function (b) { t += '- ' + b.Nama + ': ' + b.Jumlah.toLocaleString('id-ID') + ' ' + b.Satuan + '\n'; }); });
+  return t;
+}
+PAGES.hariini = { title: 'Menu Hari Ini', async render(v) {
+  var tgl = S.hiTgl || today(), adalahHariIni = tgl === today();
+  var tombol = '<div class="row2" style="margin-bottom:10px"><button class="btn alt sm" id="hiPrev">◀ Sebelumnya</button><button class="btn alt sm" id="hiNext">Berikutnya ▶</button></div>' +
+    (adalahHariIni ? '' : '<button class="btn sm" id="hiNow" style="width:100%">Kembali ke Hari Ini</button>');
+  var pasang = function () {
+    $('#hiPrev').onclick = function () { S.hiTgl = tglPlus(tgl, -1); go('hariini', null, true); };
+    $('#hiNext').onclick = function () { S.hiTgl = tglPlus(tgl, 1); go('hariini', null, true); };
+    if ($('#hiNow')) $('#hiNow').onclick = function () { S.hiTgl = null; go('hariini', null, true); };
+  };
+  var c = siklusUntuk(await call('listCycles'), tgl);
+  if (!c) {
+    v.innerHTML = tombol + empty('Belum ada menu untuk ' + fmtD(tgl), 'Tidak ada siklus menu yang mencakup tanggal ini. Buat rotasinya di Generator Rotasi.', '<button class="btn" onclick="go(\'generator\')">Buka Generator</button>');
+    pasang(); return;
+  }
+  var d = await call('rencanaBahan', { ID_Siklus: c.ID_Siklus, dari: tgl, sampai: tgl }), h = d.hari[0];
+  if (!h || !h.sesi.length) { v.innerHTML = tombol + empty('Menu belum tersusun', fmtD(tgl) + ' belum punya menu di siklus ' + c.Nama + '.'); pasang(); return; }
+  S.hiData = { d: d, h: h };
+  var html = tombol + '<div class="card hero"><h3>' + (adalahHariIni ? 'Menu Hari Ini' : 'Menu') + '</h3><div style="font-size:19px;font-weight:700">' + esc(h.Hari) + ', ' + fmtD(h.Tanggal) + '</div>' +
+    '<div style="opacity:.85">' + esc(c.Nama) + ' · ' + esc(c.Status) + ' · ' + d.porsi + ' porsi per sesi (+' + d.bufferPersen + '% buffer)</div></div>';
+  if (d.tanpaGramasi.length) html += '<div class="card" style="background:#FFF7E0;font-size:13px">Gramasi belum ada untuk: ' + d.tanpaGramasi.map(esc).join(', ') + '. Isi di tab Resep.</div>';
+  html += h.sesi.map(function (s) {
+    return '<div class="card"><h3>' + esc(s.nama) + '</h3>' + s.menu.map(function (m) {
+      return '<details open style="border-top:1px solid var(--line);padding:6px 0"><summary><b>' + esc(m.Nama) + '</b>' + (m.PIC ? ' <small style="color:var(--mut)">(' + esc(m.PIC) + ')</small>' : '') +
+        (m.adaResep ? '' : ' <small style="color:var(--bad)">gramasi belum ada</small>') + '</summary>' +
+        m.bahan.map(function (b) { return '<div style="display:flex;justify-content:space-between;font-size:13px;color:#334155;padding-left:14px"><span>' + esc(b.Nama) + ' <small style="color:var(--mut)">' + esc(b.PerPorsi) + '</small></span><span>' + b.Total.Jumlah.toLocaleString('id-ID') + ' ' + esc(b.Total.Satuan) + '</span></div>'; }).join('') + '</details>';
+    }).join('') + '</div>';
+  }).join('');
+  html += '<div class="card"><h3>Total Bahan ' + (adalahHariIni ? 'Hari Ini' : fmtD(tgl)) + '</h3>' + d.rekap.map(function (g) {
+    return '<div style="margin-top:8px"><b style="color:var(--blue)">' + esc(g.kategori) + '</b>' + g.bahan.map(function (b) {
+      return '<div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:5px 0"><span>' + esc(b.Nama) + '</span><b>' + b.Jumlah.toLocaleString('id-ID') + ' ' + esc(b.Satuan) + '</b></div>';
+    }).join('') + '</div>';
+  }).join('') + '<div class="row2"><button class="btn sm" id="hiPdf">PDF</button><button class="btn alt sm" id="hiWa">WhatsApp</button></div><div id="hiFile"></div></div>';
+  v.innerHTML = html;
+  pasang();
+  $('#hiWa').onclick = function () { window.open('https://wa.me/?text=' + encodeURIComponent(teksHariIni(S.hiData.d, S.hiData.h)), '_blank'); };
+  $('#hiPdf').onclick = async function () {
+    var r = await run(function () { return call('exportRencanaBahan', { ID_Siklus: c.ID_Siklus, dari: tgl, sampai: tgl, format: 'pdf' }); }, 'Membuat file...');
+    if (r) $('#hiFile').innerHTML = '<div style="margin-top:8px;background:#E6F6EC;border-radius:10px;padding:8px"><b>File siap ✅</b><br><small>' + esc(r.nama) + '</small><a class="btn" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="' + esc(r.url) + '">Buka File</a></div>';
+  };
+} };
+(function () {   // tombol "Hari Ini" di menu bawah
+  var nav = $('#nav');
+  if (!nav || nav.querySelector('[data-p="hariini"]')) return;
+  var b = document.createElement('button');
+  b.dataset.p = 'hariini';
+  b.innerHTML = '<i>🍳</i>Hari Ini';
+  b.onclick = function () { S.stack = []; S.hiTgl = null; go('hariini', null, true); };
+  nav.insertBefore(b, nav.querySelector('[data-p="rotasi"]'));
+  if (TABS.indexOf('hariini') < 0) TABS.push('hariini');
+})();
+
+/* ===== Hapus rotasi (siklus) agar bisa disusun ulang dari awal ===== */
+async function hapusRotasi(c) {
+  if (c.Status === 'Disetujui') return toast('Siklus sudah Disetujui. Ketuk Buka Kunci Menu di Generator dulu.', 'err');
+  if (!(await confirmBox('Hapus rotasi "' + c.Nama + '" beserta seluruh menunya? Setelah itu Anda bisa membuat rotasi baru. Tindakan ini tidak bisa dibatalkan.'))) return;
+  var r = await run(function () { return call('hapusSiklus', { ID_Siklus: c.ID_Siklus }); }, 'Menghapus rotasi...');
+  if (r) { S.cid = null; S.cycle = null; S.data = null; toast('Rotasi "' + r.Nama + '" dihapus. Silakan buat rotasi baru.', 'ok'); go('generator', null, true); }
+}
+
+/* ===== TEMA "Navy Gold Royale": navy dongker + emas di atas krem gading, tombol & tab 3D mengambang ===== */
+(function () {
+  var st = document.createElement('style');
+  st.textContent = [
+    ':root{--navy:#0B1F44;--blue:#13306B;--gold:#D4A017;--bg:#F7F3EA;--card:#FFFFFF;--line:#E8DFC9;--tx:#14213D;--mut:#6B6250;--ok:#1E7A4C;--warn:#C27A00;--bad:#7A1F2B}',
+    'body{background:var(--bg)}',
+    'header{background:linear-gradient(135deg,#0B1F44 0%,#16336E 100%);box-shadow:0 4px 14px rgba(11,31,68,.35)}',
+    'header h2{color:#F5C451;letter-spacing:.2px}#sub{color:#E9DFC7}header button{color:#F5C451}',
+    'main{padding-bottom:118px}',
+    '.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 0 #EFE6D2,0 10px 22px rgba(11,31,68,.08)}',
+    '.card h3{color:var(--navy)}',
+    '.hero{background:linear-gradient(135deg,#0B1F44 0%,#1B3A72 100%);border:1px solid #D4A017;box-shadow:0 4px 0 #091835,0 14px 26px rgba(11,31,68,.35)}',
+    '.hero h3{color:#F5C451}.bar{background:rgba(255,255,255,.18)}.bar i{background:linear-gradient(90deg,#D4A017,#F5C451)}',
+    '.tile{background:#fff;color:var(--navy);border:1px solid var(--line);border-bottom:3px solid #D4A017;border-radius:16px;box-shadow:0 4px 0 #E8DFC9,0 12px 22px rgba(11,31,68,.12);transition:transform .12s,box-shadow .12s}',
+    '.tile:active{transform:translateY(3px);box-shadow:0 1px 0 #E8DFC9,0 4px 10px rgba(11,31,68,.12)}',
+    '.btn{background:linear-gradient(180deg,#16336E,#0B1F44);color:#F5C451;border-radius:14px;box-shadow:0 4px 0 #061229,0 10px 18px rgba(11,31,68,.28);transition:transform .12s,box-shadow .12s}',
+    '.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #061229,0 4px 8px rgba(11,31,68,.25)}',
+    '.btn.alt{background:#fff;color:var(--navy);border:1.5px solid #D4A017;box-shadow:0 4px 0 #E8DFC9,0 8px 14px rgba(11,31,68,.10)}',
+    '.btn.gold{background:linear-gradient(180deg,#F5C451,#D4A017);color:#0B1F44;box-shadow:0 4px 0 #9C7410,0 10px 18px rgba(212,160,23,.35)}',
+    '.btn.bad{background:linear-gradient(180deg,#962838,#7A1F2B);color:#fff;box-shadow:0 4px 0 #4E121B,0 10px 18px rgba(122,31,43,.3)}',
+    'input,select{border-color:#D9CDB0;background:#FFFDF8}input:focus,select:focus{outline:none;border-color:#D4A017;box-shadow:0 0 0 3px rgba(212,160,23,.25)}',
+    'label{color:#5A5242}',
+    '.tabs button{background:#fff;color:var(--navy);border:1px solid var(--line);box-shadow:0 3px 0 #E8DFC9}',
+    '.tabs button.on{background:#0B1F44;color:#F5C451;border-color:#0B1F44;box-shadow:0 3px 0 #061229,0 8px 14px rgba(11,31,68,.25)}',
+    'th{background:#0B1F44;color:#F5C451}tr.sun td{background:#FFF1C9}td.d{color:var(--navy)}',
+    '.wrap{border-color:var(--line);box-shadow:0 8px 18px rgba(11,31,68,.06)}',
+    '.b-VALID{background:#1E7A4C}.b-PERINGATAN{background:#C27A00}.b-TIDAK{background:#7A1F2B}.dot.TIDAK{background:#7A1F2B}',
+    '.menuitem b{color:var(--navy)}.meal h4{color:var(--navy)}',
+    '#sheet{background:#FFFDF8;border-top:3px solid #D4A017}',
+    '#toast{background:#0B1F44;color:#F5C451;box-shadow:0 10px 24px rgba(0,0,0,.3)}#toast.ok{background:#1E7A4C;color:#fff}#toast.err{background:#7A1F2B;color:#fff}',
+    '.sp{border-color:#EADFC6;border-top-color:#D4A017}#load{color:var(--navy)}',
+    'nav{background:#F7F3EA;border-top:1px solid #E8DFC9;gap:6px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));box-shadow:0 -6px 18px rgba(11,31,68,.08)}',
+    'nav button{border-radius:14px;padding:7px 0 6px;font-size:10.5px;font-weight:700;box-shadow:0 4px 0 rgba(0,0,0,.22),0 9px 14px rgba(11,31,68,.20);transform:translateY(-1px);transition:transform .12s,box-shadow .12s}',
+    'nav button i{font-size:19px}',
+    'nav button.on{transform:translateY(-5px);box-shadow:0 6px 0 rgba(0,0,0,.25),0 14px 20px rgba(11,31,68,.32);outline:2px solid #F5C451;outline-offset:1px}',
+    'nav button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.2),0 3px 6px rgba(11,31,68,.2)}',
+    'nav button[data-p="beranda"]{background:#0B1F44;color:#F5C451}',
+    'nav button[data-p="hariini"]{background:#D4A017;color:#0B1F44}',
+    'nav button[data-p="rotasi"]{background:#7A1F2B;color:#FFFFFF}',
+    'nav button[data-p="resep"]{background:#4FB3E8;color:#0B1F44}',
+    'nav button[data-p="bahan"]{background:#111111;color:#F5C451}',
+    'nav button[data-p="lainnya"]{background:#E8711A;color:#1A1A1A}',
+    '.katgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}',
+    '.kat{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;box-shadow:0 3px 0 #E8DFC9,0 8px 16px rgba(11,31,68,.08);cursor:pointer;transition:transform .12s}',
+    '.kat:active{transform:translateY(2px)}.kat .ki{font-size:26px}.kat small{display:block;color:var(--mut);font-size:11px;line-height:1.2}',
+    '.kat b{display:block;font-size:21px;color:#0B1F44;line-height:1.15}.kattot{margin-top:10px;text-align:center;font-size:12px;color:var(--mut)}'
+  ].join('\n');
+  document.head.appendChild(st);
+})();
+var IKON_KAT = { 'Ayam': '🍗', 'Ikan': '🐟', 'Seafood': '🦐', 'Daging Sapi': '🥩', 'Telur': '🥚', 'Bebek': '🦆', 'Hati Ampela': '🍢', 'Nabati': '🫘', 'Sup': '🍲', 'Sayur': '🥦', 'Pendamping': '🥟', 'Rebusan': '🥔', 'Karbo Sarapan': '🍚', 'Snack': '🍡', 'Lainnya': '🌶️' };
+/* Beranda: ringkasan + jumlah menu aktif per kategori (ketuk kategori untuk membuka daftarnya) */
+PAGES.beranda = { title: 'ChefPlan Pro', async render(v) {
+  var d = await call('getDashboard'), c = d.siklusAktif, h = '';
+  if (c && !S.cid) S.cid = c.ID_Siklus;
+  if (d.kosong) {
+    h += '<div class="card"><h3>Mulai pengaturan</h3><ol class="list"><li>Buka <b>Lainnya → Database Menu</b> dan isi daftar masakan (minimal sesuai kebutuhan jarak pengulangan).</li><li>Tambahkan masakan non-protein <b>Nasi Kuning</b> dan <b>Mi Goreng</b> untuk sarapan Minggu.</li><li>Isi bahan baku dan resep agar food cost terhitung.</li><li>Buka <b>Rotasi → Generator</b> untuk membuat rotasi.</li></ol></div>';
+  }
+  if (c) {
+    var pct = Math.min(100, Math.round(d.hariTersusun / Number(c.Durasi_Hari) * 100));
+    h += '<div class="card hero"><h3>Siklus Aktif</h3><div style="font-size:18px;font-weight:700">' + esc(c.Nama) + '</div><div style="opacity:.85">Mulai ' + fmtD(c.Tgl_Mulai) + ' · ' + esc(c.Durasi_Hari) + ' hari · Status ' + esc(c.Status) + '</div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div><div style="display:flex;justify-content:space-between;align-items:center"><span>' + d.hariTersusun + ' dari ' + esc(c.Durasi_Hari) + ' hari tersusun</span>' + badge(d.statusValidasi === 'BELUM DIVALIDASI' ? 'BELUM' : d.statusValidasi) + '</div></div>';
+  } else if (!d.kosong) {
+    h += empty('Belum ada siklus', 'Buat rotasi pertama Anda di Generator Rotasi.');
+  }
+  h += '<div class="grid"><div class="tile" onclick="go(\'generator\')"><i>⚙️</i>Generator Rotasi</div><div class="tile" onclick="go(\'resep\')"><i>📖</i>Database Resep</div><div class="tile" onclick="go(\'bahan\')"><i>🧾</i>Kebutuhan Bahan</div><div class="tile" onclick="go(\'ekspor\')"><i>📤</i>Ekspor Laporan</div></div>' +
+    '<div class="card" style="margin-top:12px;display:flex;justify-content:space-around;text-align:center"><div><b style="font-size:22px;color:var(--navy)">' + d.jumlahMenuAktif + '</b><br><small>Masakan aktif</small></div><div><b style="font-size:22px;color:var(--navy)">' + d.jumlahBahan + '</b><br><small>Bahan baku</small></div></div>';
+  h += '<div class="card"><h3>Menu Aktif per Kategori</h3><div class="katgrid">' + (d.perKategori || []).map(function (k) {
+    return '<div class="kat" data-k="' + esc(k.nama) + '"><span class="ki">' + (IKON_KAT[k.nama] || '🍽️') + '</span><div><small>' + esc(k.nama === 'Daging Sapi' ? 'Daging' : k.nama) + '</small><b>' + k.jumlah + '</b><small>menu</small></div></div>';
+  }).join('') + '</div><div class="kattot">Total ' + d.jumlahMenuAktif + ' menu aktif · ' + d.jumlahBahan + ' bahan baku</div></div>';
+  v.innerHTML = h;
+  v.querySelectorAll('.kat').forEach(function (e) {
+    e.onclick = async function () {
+      var k = e.dataset.k;
+      await go('menu');
+      if (KATS.indexOf(k) >= 0 && $('#mk')) { $('#mk').value = k; $('#mk').oninput(); }
+    };
+  });
+} };
+
+/* ===== TEMA lanjutan: latar per tab, blok berwarna, halaman pembuka navy ===== */
+(function () {
+  var TAB = {   // [latar halaman, warna tab, warna judul kartu]
+    beranda: ['#E9EEF7', '#0B1F44', '#0B1F44'], hariini: ['#FAF0D2', '#D4A017', '#6B4A00'], rotasi: ['#F6E5E7', '#7A1F2B', '#7A1F2B'],
+    resep: ['#E2F2FB', '#4FB3E8', '#0B4A6E'], bahan: ['#ECEAE4', '#111111', '#111111'], lainnya: ['#FCEBDD', '#E8711A', '#8A3B00'] };
+  var KAT = {   // [latar, garis, tulisan] blok kategori di Beranda
+    'Ayam': ['#FFF1CC', '#E9C766', '#6B4A00'], 'Ikan': ['#DDF0FB', '#8CCAEE', '#0B4A6E'], 'Seafood': ['#FFE6D3', '#F2A36B', '#8A3B00'],
+    'Daging Sapi': ['#F6DDE1', '#D88C98', '#6E1A26'], 'Telur': ['#FFF6BF', '#E8D45C', '#6B5A00'], 'Bebek': ['#E2E8F5', '#97A8CF', '#0B1F44'],
+    'Hati Ampela': ['#F8E0EA', '#DE93B3', '#7A1F43'], 'Nabati': ['#ECF5D6', '#A9C870', '#3E5A0B'], 'Sup': ['#DFF3EC', '#7CC5A9', '#0E5A45'],
+    'Sayur': ['#ECF9C8', '#B5DC3E', '#3B5A00'], 'Pendamping': ['#F3E8D6', '#CDAE7C', '#5A4320'], 'Rebusan': ['#EFE6D8', '#C4AE8A', '#5A4A2E'],
+    'Karbo Sarapan': ['#FFEDCF', '#E9B866', '#6B4400'], 'Snack': ['#FBE3EE', '#E59BBE', '#7A1F4A'], 'Lainnya': ['#E9E7E2', '#BDB8AC', '#2A2A2A'] };
+  var LAIN = {  // blok menu "Lainnya"
+    tambah: ['#ECF9C8', '#9DCB2A', '#3B5A00'], menu: ['#FFF1CC', '#D4A017', '#6B4A00'], dbbahan: ['#F6DDE1', '#7A1F2B', '#6E1A26'],
+    validasi: ['#DFF3EC', '#1E7A4C', '#0E5A45'], ekspor: ['#FFE6D3', '#E8711A', '#8A3B00'], pengaturan: ['#E2E8F5', '#0B1F44', '#0B1F44'] };
+  var TILE = [['generator', '#F6E5E7', '#7A1F2B'], ['resep', '#E2F2FB', '#4FB3E8'], ['bahan', '#ECEAE4', '#111111'], ['ekspor', '#FCEBDD', '#E8711A']];
+  var c = [];
+  Object.keys(TAB).forEach(function (k) {
+    var t = TAB[k];
+    c.push('body[data-tab="' + k + '"]{background:' + t[0] + '}body[data-tab="' + k + '"] nav{background:' + t[0] + '}');
+    c.push('body[data-tab="' + k + '"] header{border-bottom:4px solid ' + t[1] + '}');
+    c.push('body[data-tab="' + k + '"] .card:not(.hero){border-top:4px solid ' + t[1] + '}body[data-tab="' + k + '"] .card:not(.hero) h3{color:' + t[2] + '}');
+  });
+  c.push('body[data-tab="bahan"] header{border-bottom-color:#D4A017}body[data-tab="bahan"] .card:not(.hero){border-top-color:#D4A017}');
+  Object.keys(KAT).forEach(function (k) {
+    var t = KAT[k];
+    c.push('.kat[data-k="' + k + '"]{background:' + t[0] + ';border-color:' + t[1] + ';box-shadow:0 3px 0 ' + t[1] + ',0 8px 16px rgba(11,31,68,.10)}.kat[data-k="' + k + '"] b,.kat[data-k="' + k + '"] small{color:' + t[2] + '}');
+  });
+  Object.keys(LAIN).forEach(function (k) {
+    var t = LAIN[k];
+    c.push('.menuitem[data-k="' + k + '"]{background:' + t[0] + ';border:1px solid ' + t[1] + '33;border-left:6px solid ' + t[1] + ';border-radius:0 14px 14px 0;margin:8px 0;padding:12px 10px;box-shadow:0 3px 0 ' + t[1] + '44,0 8px 14px rgba(11,31,68,.08)}.menuitem[data-k="' + k + '"] b{color:' + t[2] + '}.menuitem[data-k="' + k + '"] small{color:' + t[2] + ';opacity:.85}');
+  });
+  TILE.forEach(function (t) {
+    c.push('.tile[onclick*="' + t[0] + '"]{background:' + t[1] + ';border-color:' + t[2] + '55;border-bottom:4px solid ' + t[2] + ';box-shadow:0 4px 0 ' + t[2] + '66,0 12px 22px rgba(11,31,68,.14)}');
+  });
+  c.push('.tile[onclick*="bahan"]{border-bottom-color:#D4A017}');
+  c.push('body[data-tab="beranda"] .card.empty,body[data-tab="beranda"] .card:not(.hero):not(.kat){background:#FFFFFF}');
+  c.push('.card.empty b{color:#0B1F44}');
+  c.push('.card.hero h3{color:#F5C451}');
+  /* halaman pembuka */
+  c.push('#splash{background:radial-gradient(circle at 50% 28%,#1E3F7C 0%,#0B1F44 58%,#06122B 100%)}');
+  c.push('#splash img{background:#fff;border-radius:26px;padding:14px;border:2px solid #D4A017;box-shadow:0 0 0 6px rgba(212,160,23,.18),0 18px 40px rgba(0,0,0,.45);box-sizing:border-box}');
+  c.push('#splash .by{color:#E9DFC7;margin-top:14px}#splash .by b{color:#F5C451}#splash p{color:#BFB59E}');
+  c.push('#splash #btnMulai{background:linear-gradient(180deg,#F5C451,#D4A017);color:#0B1F44;box-shadow:0 5px 0 #8C6710,0 14px 26px rgba(0,0,0,.4)}');
+  c.push('#splash #btnSet{background:transparent;color:#F5E6C0;border:1.5px solid #D4A017;box-shadow:0 4px 0 rgba(0,0,0,.35)}');
+  var st = document.createElement('style');
+  st.textContent = c.join('\n');
+  document.head.appendChild(st);
+  document.body.setAttribute('data-tab', 'beranda');
+})();
+</script>
+
+<script>
+/* ===== LAPISAN PWA: koneksi ke Apps Script lewat internet (fetch + token), instalasi, dan mode offline ===== */
+(function () {
+  var KEY = 'chefplan_koneksi';
+  function cfg() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function simpan(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) { } }
+  function kirim(c, action, payload) {
+    return fetch(c.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ token: c.token, action: action, payload: payload || {} }) })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (r) { return r; }, function () {
+        throw new Error(navigator.onLine ? 'Tidak bisa terhubung ke database. Periksa URL Web App dan akses "Siapa saja".' : 'Tidak ada internet. Periksa sinyal HP Anda.');
+      });
+  }
+  window.call = function (action, payload) {
+    var c = cfg();
+    if (!c) { setTimeout(bukaKoneksi, 50); return Promise.reject(new Error('Hubungkan aplikasi ke database terlebih dulu.')); }
+    return kirim(c, action, payload).then(function (r) {
+      if (r && r.ok) return r.data;
+      if (r && /Token/i.test(r.error || '')) setTimeout(function () { bukaKoneksi('Token ditolak server. Periksa lagi.'); }, 50);
+      throw new Error(r ? r.error : 'Tidak ada respons dari server.');
+    });
+  };
+  window.bukaKoneksi = function (pesan) {
+    var c = cfg() || {};
+    openSheet('<h3>Hubungkan ke Database</h3>' + (pesan ? '<p style="color:var(--bad)">' + esc(pesan) + '</p>' : '') +
+      '<p style="font-size:13px;color:var(--mut)">Isi sekali saja. Data tetap tersimpan di Google Sheets Anda.</p>' +
+      fld('k_url', 'URL Web App Apps Script (berakhiran /exec)', c.url || '', 'url', 'placeholder="https://script.google.com/macros/s/.../exec"') +
+      fld('k_tok', 'Token API (dari fungsi buatTokenApi)', c.token || '') +
+      '<button class="btn" id="kSave">Uji dan Simpan</button><div id="kInfo" style="margin-top:8px;font-size:13px"></div>');
+    $('#kSave').onclick = function () {
+      var baru = { url: gv('k_url').trim(), token: gv('k_tok').trim() };
+      if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(baru.url)) { $('#kInfo').innerHTML = '<span style="color:var(--bad)">URL harus diawali https://script.google.com/macros/s/ dan berakhiran /exec</span>'; return; }
+      if (baru.token.length < 10) { $('#kInfo').innerHTML = '<span style="color:var(--bad)">Token belum diisi dengan benar.</span>'; return; }
+      $('#kInfo').textContent = 'Menguji koneksi...';
+      kirim(baru, 'getDashboard', {}).then(function (r) {
+        if (r && r.ok) { simpan(baru); closeSheet(); toast('Terhubung ke database ✅', 'ok'); S.stack = []; go(S.cur && S.cur !== 'pengaturan' ? S.cur : 'beranda', null, true); }
+        else $('#kInfo').innerHTML = '<span style="color:var(--bad)">' + esc(r && r.error ? r.error : 'Gagal') + '</span>';
+      }, function (e) { $('#kInfo').innerHTML = '<span style="color:var(--bad)">' + esc(e.message) + '</span>'; });
+    };
+  };
+  /* Pengaturan: kartu koneksi */
+  var asliSet = PAGES.pengaturan.render;
+  PAGES.pengaturan.render = async function (v) {
+    if (!cfg()) { v.innerHTML = '<div class="card"><h3>Koneksi Database</h3><p>Aplikasi belum terhubung ke database.</p><button class="btn" onclick="bukaKoneksi()">Hubungkan Sekarang</button></div>'; return; }
+    await asliSet(v);
+    v.insertAdjacentHTML('afterbegin', '<div class="card"><h3>Koneksi Database</h3><p style="font-size:13px;color:var(--mut);word-break:break-all">Terhubung ke: ' + esc(cfg().url.slice(0, 60)) + '…</p><button class="btn alt" onclick="bukaKoneksi()">Ubah Koneksi</button></div>');
+  };
+  /* Tombol instal ke HP */
+  var tunda = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); tunda = e;
+    if (!$('#btnInstal')) {
+      var b = document.createElement('button'); b.id = 'btnInstal'; b.className = 'btn alt'; b.style.maxWidth = '320px'; b.textContent = '📲 Instal ke HP';
+      b.onclick = function () { tunda.prompt(); tunda.userChoice.then(function () { b.remove(); tunda = null; }); };
+      $('#btnSet').insertAdjacentElement('afterend', b);
+    }
+  });
+  window.addEventListener('appinstalled', function () { var b = $('#btnInstal'); if (b) b.remove(); toast('ChefPlan Pro terpasang di HP ✅', 'ok'); });
+  window.addEventListener('offline', function () { toast('Koneksi internet terputus.', 'err'); });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () { });
+  if (!cfg()) $('#btnMulai').addEventListener('click', function () { setTimeout(function () { if (!cfg()) bukaKoneksi(); }, 300); });
+})();
+</script>
 </body>
 </html>
